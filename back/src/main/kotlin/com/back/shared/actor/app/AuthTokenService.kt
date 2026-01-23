@@ -1,6 +1,6 @@
-package com.back.boundedContexts.member.app
+package com.back.shared.actor.app
 
-import com.back.boundedContexts.member.domain.Member
+import com.back.shared.actor.domain.Member
 import com.back.standard.util.Ut
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service

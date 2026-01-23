@@ -1,12 +1,12 @@
 package com.back.global.rq
 
-import com.back.boundedContexts.member.app.MemberFacade
-import com.back.boundedContexts.member.domain.Member
-import com.back.boundedContexts.member.domain.MemberProxy
 import com.back.boundedContexts.post.app.PostMemberService
 import com.back.boundedContexts.post.domain.PostMember
 import com.back.boundedContexts.post.domain.PostMemberProxy
 import com.back.global.security.SecurityUser
+import com.back.shared.actor.app.ActorFacade
+import com.back.shared.actor.domain.Member
+import com.back.shared.actor.domain.MemberProxy
 import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -17,14 +17,14 @@ import org.springframework.stereotype.Component
 class Rq(
     private val req: HttpServletRequest,
     private val resp: HttpServletResponse,
-    private val memberFacade: MemberFacade,
+    private val actorFacade: ActorFacade,
     private val postMemberService: PostMemberService,
 ) {
     val actor: Member
         get() = (SecurityContextHolder.getContext()?.authentication?.principal as? SecurityUser)
             ?.let {
                 MemberProxy(
-                    memberFacade.getReferenceById(it.id),
+                    actorFacade.getReferenceById(it.id),
                     it.id,
                     it.username,
                     it.nickname

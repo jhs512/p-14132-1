@@ -1,9 +1,9 @@
 package com.back.global.initData
 
-import com.back.boundedContexts.member.app.MemberFacade
 import com.back.boundedContexts.post.app.PostFacade
 import com.back.boundedContexts.post.app.PostMemberService
 import com.back.global.app.CustomConfigProperties
+import com.back.shared.actor.app.ActorFacade
 import com.back.standard.extensions.getOrThrow
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.ApplicationRunner
@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional
 @Configuration
 class NotProdInitData(
     private val postFacade: PostFacade,
-    private val memberFacade: MemberFacade,
+    private val actorFacade: ActorFacade,
     private val postMemberService: PostMemberService,
     private val customConfigProperties: CustomConfigProperties,
 ) {
@@ -35,26 +35,26 @@ class NotProdInitData(
 
     @Transactional
     fun work1() {
-        if (memberFacade.count() > 0) return
+        if (actorFacade.count() > 0) return
 
-        val memberSystem = memberFacade.join("system", "1234", "시스템")
+        val memberSystem = actorFacade.join("system", "1234", "시스템")
         memberSystem.modifyApiKey(memberSystem.username)
 
-        val memberAdmin = memberFacade.join("admin", "1234", "관리자")
+        val memberAdmin = actorFacade.join("admin", "1234", "관리자")
         memberAdmin.modifyApiKey(memberAdmin.username)
 
-        val memberUser1 = memberFacade.join("user1", "1234", "유저1")
+        val memberUser1 = actorFacade.join("user1", "1234", "유저1")
         memberUser1.modifyApiKey(memberUser1.username)
 
-        val memberUser2 = memberFacade.join("user2", "1234", "유저2")
+        val memberUser2 = actorFacade.join("user2", "1234", "유저2")
         memberUser2.modifyApiKey(memberUser2.username)
 
-        val memberUser3 = memberFacade.join("user3", "1234", "유저3")
+        val memberUser3 = actorFacade.join("user3", "1234", "유저3")
         memberUser3.modifyApiKey(memberUser3.username)
 
         // 코틀린 람다 스타일로 변경
         customConfigProperties.notProdMembers.forEach { notProdMember ->
-            val socialMember = memberFacade.join(
+            val socialMember = actorFacade.join(
                 notProdMember.username,
                 null,
                 notProdMember.nickname,

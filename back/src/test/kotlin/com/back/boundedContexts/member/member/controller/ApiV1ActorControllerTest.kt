@@ -1,7 +1,7 @@
 package com.back.boundedContexts.member.member.controller
 
-import com.back.boundedContexts.member.`in`.ApiV1MemberController
-import com.back.boundedContexts.member.app.MemberFacade
+import com.back.shared.actor.`in`.ApiV1ActorController
+import com.back.shared.actor.app.ActorFacade
 import com.back.standard.extensions.getOrThrow
 import jakarta.servlet.http.Cookie
 import org.assertj.core.api.Assertions.assertThat
@@ -26,9 +26,9 @@ import org.springframework.transaction.annotation.Transactional
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
-class ApiV1MemberControllerTest {
+class ApiV1ActorControllerTest {
     @Autowired
-    private lateinit var memberFacade: MemberFacade
+    private lateinit var actorFacade: ActorFacade
 
     @Autowired
     private lateinit var mvc: MockMvc
@@ -38,7 +38,7 @@ class ApiV1MemberControllerTest {
     fun t1() {
         val resultActions = mvc
             .perform(
-                post("/api/v1/members")
+                post("/api/v1/actors")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(
                         """
@@ -52,10 +52,10 @@ class ApiV1MemberControllerTest {
             )
             .andDo(print())
 
-        val member = memberFacade.findByUsername("usernew").getOrThrow()
+        val member = actorFacade.findByUsername("usernew").getOrThrow()
 
         resultActions
-            .andExpect(handler().handlerType(ApiV1MemberController::class.java))
+            .andExpect(handler().handlerType(ApiV1ActorController::class.java))
             .andExpect(handler().methodName("join"))
             .andExpect(status().isCreated)
             .andExpect(jsonPath("$.resultCode").value("201-1"))
@@ -73,7 +73,7 @@ class ApiV1MemberControllerTest {
     fun t2() {
         val resultActions = mvc
             .perform(
-                post("/api/v1/members/login")
+                post("/api/v1/actors/login")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(
                         """
@@ -86,10 +86,10 @@ class ApiV1MemberControllerTest {
             )
             .andDo(print())
 
-        val member = memberFacade.findByUsername("user1").getOrThrow()
+        val member = actorFacade.findByUsername("user1").getOrThrow()
 
         resultActions
-            .andExpect(handler().handlerType(ApiV1MemberController::class.java))
+            .andExpect(handler().handlerType(ApiV1ActorController::class.java))
             .andExpect(handler().methodName("login"))
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.resultCode").value("200-1"))
@@ -135,14 +135,14 @@ class ApiV1MemberControllerTest {
     fun t3() {
         val resultActions = mvc
             .perform(
-                get("/api/v1/members/me")
+                get("/api/v1/actors/me")
             )
             .andDo(print())
 
-        val member = memberFacade.findByUsername("user1").getOrThrow()
+        val member = actorFacade.findByUsername("user1").getOrThrow()
 
         resultActions
-            .andExpect(handler().handlerType(ApiV1MemberController::class.java))
+            .andExpect(handler().handlerType(ApiV1ActorController::class.java))
             .andExpect(handler().methodName("me"))
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.id").value(member.id))
@@ -156,18 +156,18 @@ class ApiV1MemberControllerTest {
     @Test
     @DisplayName("내 정보, with apiKey Cookie")
     fun t4() {
-        val actor = memberFacade.findByUsername("user1").getOrThrow()
+        val actor = actorFacade.findByUsername("user1").getOrThrow()
         val actorApiKey: String = actor.apiKey
 
         val resultActions = mvc
             .perform(
-                get("/api/v1/members/me")
+                get("/api/v1/actors/me")
                     .cookie(Cookie("apiKey", actorApiKey))
             )
             .andDo(print())
 
         resultActions
-            .andExpect(handler().handlerType(ApiV1MemberController::class.java))
+            .andExpect(handler().handlerType(ApiV1ActorController::class.java))
             .andExpect(handler().methodName("me"))
             .andExpect(status().isOk)
     }
@@ -177,12 +177,12 @@ class ApiV1MemberControllerTest {
     fun t6() {
         val resultActions = mvc
             .perform(
-                delete("/api/v1/members/logout")
+                delete("/api/v1/actors/logout")
             )
             .andDo(print())
 
         resultActions
-            .andExpect(handler().handlerType(ApiV1MemberController::class.java))
+            .andExpect(handler().handlerType(ApiV1ActorController::class.java))
             .andExpect(handler().methodName("logout"))
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.resultCode").value("200-1"))
@@ -205,18 +205,18 @@ class ApiV1MemberControllerTest {
     @Test
     @DisplayName("엑세스 토큰이 만료되었거나 유효하지 않다면 apiKey를 통해서 재발급")
     fun t7() {
-        val actor = memberFacade.findByUsername("user1").getOrThrow()
+        val actor = actorFacade.findByUsername("user1").getOrThrow()
         val actorApiKey: String = actor.apiKey
 
         val resultActions = mvc
             .perform(
-                get("/api/v1/members/me")
+                get("/api/v1/actors/me")
                     .header(HttpHeaders.AUTHORIZATION, "Bearer $actorApiKey wrong-access-token")
             )
             .andDo(print())
 
         resultActions
-            .andExpect(handler().handlerType(ApiV1MemberController::class.java))
+            .andExpect(handler().handlerType(ApiV1ActorController::class.java))
             .andExpect(handler().methodName("me"))
             .andExpect(status().isOk)
 
@@ -238,7 +238,7 @@ class ApiV1MemberControllerTest {
     fun t8() {
         val resultActions = mvc
             .perform(
-                get("/api/v1/members/me")
+                get("/api/v1/actors/me")
                     .header(HttpHeaders.AUTHORIZATION, "key")
             )
             .andDo(print())

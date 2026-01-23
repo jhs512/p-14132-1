@@ -1,11 +1,11 @@
-package com.back.boundedContexts.member.`in`
+package com.back.shared.actor.`in`
 
-import com.back.shared.member.dto.MemberDto
-import com.back.shared.member.dto.MemberWithUsernameDto
-import com.back.boundedContexts.member.app.MemberFacade
 import com.back.global.exceptions.BusinessException
 import com.back.global.rq.Rq
 import com.back.global.rsData.RsData
+import com.back.shared.actor.app.ActorFacade
+import com.back.shared.actor.dto.MemberDto
+import com.back.shared.actor.dto.MemberWithUsernameDto
 import com.back.standard.extensions.getOrThrow
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
@@ -23,11 +23,11 @@ import java.util.concurrent.TimeUnit
 
 
 @RestController
-@RequestMapping("/api/v1/members")
-@Tag(name = "ApiV1MemberController", description = "API 회원 컨트롤러")
+@RequestMapping("/api/v1/actors")
+@Tag(name = "ApiV1ActorController", description = "API 회원 컨트롤러")
 @SecurityRequirement(name = "bearerAuth")
-class ApiV1MemberController(
-    private val memberFacade: MemberFacade,
+class ApiV1ActorController(
+    private val actorFacade: ActorFacade,
     private val rq: Rq
 ) {
     @GetMapping("/{id}/redirectToProfileImg")
@@ -35,7 +35,7 @@ class ApiV1MemberController(
     @Transactional(readOnly = true)
     @Operation(summary = "프로필 이미지 리다이렉트(브라우저 캐시 20분)")
     fun redirectToProfileImg(@PathVariable id: Int): ResponseEntity<Void> {
-        val member = memberFacade.findById(id).getOrThrow()
+        val member = actorFacade.findById(id).getOrThrow()
 
         val cacheControl = CacheControl
             .maxAge(20, TimeUnit.MINUTES)
@@ -65,7 +65,7 @@ class ApiV1MemberController(
     fun join(
         @RequestBody @Valid reqBody: MemberJoinReqBody
     ): RsData<MemberDto> {
-        val member = memberFacade.join(
+        val member = actorFacade.join(
             reqBody.username,
             reqBody.password,
             reqBody.nickname
@@ -98,16 +98,16 @@ class ApiV1MemberController(
     fun login(
         @RequestBody @Valid reqBody: MemberLoginReqBody
     ): RsData<MemberLoginResBody> {
-        val member = memberFacade
+        val member = actorFacade
             .findByUsername(reqBody.username)
             ?: throw BusinessException("401-1", "존재하지 않는 아이디입니다.")
 
-        memberFacade.checkPassword(
+        actorFacade.checkPassword(
             member,
             reqBody.password
         )
 
-        val accessToken = memberFacade.genAccessToken(member)
+        val accessToken = actorFacade.genAccessToken(member)
 
         rq.setCookie("apiKey", member.apiKey)
         rq.setCookie("accessToken", accessToken)

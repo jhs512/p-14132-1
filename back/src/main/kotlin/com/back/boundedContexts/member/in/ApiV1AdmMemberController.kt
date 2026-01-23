@@ -1,8 +1,8 @@
 package com.back.boundedContexts.member.`in`
 
 import PageDto
-import com.back.boundedContexts.member.app.MemberFacade
-import com.back.shared.member.dto.MemberWithUsernameDto
+import com.back.shared.actor.app.ActorFacade
+import com.back.shared.actor.dto.MemberWithUsernameDto
 import com.back.standard.dto.MemberSearchKeywordType1
 import com.back.standard.dto.MemberSearchSortType1
 import com.back.standard.extensions.getOrThrow
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*
 @Tag(name = "ApiV1AdmMemberController", description = "관리자용 API 회원 컨트롤러")
 @SecurityRequirement(name = "bearerAuth")
 class ApiV1AdmMemberController(
-    private val memberFacade: MemberFacade
+    private val actorFacade: ActorFacade
 ) {
     @GetMapping
     @Transactional(readOnly = true)
@@ -42,7 +42,7 @@ class ApiV1AdmMemberController(
             5
         }
 
-        val memberPage = memberFacade.findPagedByKw(kwType, kw, sort, page, pageSize)
+        val memberPage = actorFacade.findPagedByKw(kwType, kw, sort, page, pageSize)
 
         return PageDto(
             memberPage
@@ -56,7 +56,7 @@ class ApiV1AdmMemberController(
     fun getItem(
         @PathVariable id: Int
     ): MemberWithUsernameDto {
-        val member = memberFacade.findById(id).getOrThrow()
+        val member = actorFacade.findById(id).getOrThrow()
 
         return MemberWithUsernameDto(member)
     }

@@ -1,4 +1,4 @@
-package com.back.boundedContexts.member.domain
+package com.back.shared.actor.domain
 
 import com.back.global.jpa.entity.BaseTime
 import jakarta.persistence.*

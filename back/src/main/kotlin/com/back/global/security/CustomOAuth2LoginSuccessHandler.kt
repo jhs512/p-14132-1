@@ -1,7 +1,7 @@
 package com.back.global.security
 
-import com.back.boundedContexts.member.app.MemberFacade
 import com.back.global.rq.Rq
+import com.back.shared.actor.app.ActorFacade
 import com.back.standard.extensions.base64Decode
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional
 
 @Component
 class CustomOAuth2LoginSuccessHandler(
-    private val memberFacade: MemberFacade,
+    private val actorFacade: ActorFacade,
     private val rq: Rq,
 ) : AuthenticationSuccessHandler {
 
@@ -24,7 +24,7 @@ class CustomOAuth2LoginSuccessHandler(
     ) {
         val actor = rq.actor
 
-        val accessToken = memberFacade.genAccessToken(actor)
+        val accessToken = actorFacade.genAccessToken(actor)
 
         rq.setCookie("apiKey", actor.apiKey)
         rq.setCookie("accessToken", accessToken)

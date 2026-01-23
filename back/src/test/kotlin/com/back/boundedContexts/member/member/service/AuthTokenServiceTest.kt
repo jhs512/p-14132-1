@@ -1,7 +1,7 @@
 package com.back.boundedContexts.member.member.service
 
-import com.back.boundedContexts.member.app.AuthTokenService
-import com.back.boundedContexts.member.app.MemberFacade
+import com.back.shared.actor.app.AuthTokenService
+import com.back.shared.actor.app.ActorFacade
 import com.back.standard.extensions.getOrThrow
 import com.back.standard.util.Ut
 import io.jsonwebtoken.Jwts
@@ -22,7 +22,7 @@ import java.util.*
 @Transactional
 class AuthTokenServiceTest {
     @Autowired
-    private lateinit var memberFacade: MemberFacade
+    private lateinit var actorFacade: ActorFacade
 
     @Autowired
     private lateinit var authTokenService: AuthTokenService
@@ -104,7 +104,7 @@ class AuthTokenServiceTest {
     @Test
     @DisplayName("authTokenService.genAccessToken(member);")
     fun t4() {
-        val memberUser1 = memberFacade.findByUsername("user1").getOrThrow()
+        val memberUser1 = actorFacade.findByUsername("user1").getOrThrow()
 
         val accessToken = authTokenService.genAccessToken(memberUser1)
 

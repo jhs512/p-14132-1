@@ -1,6 +1,6 @@
-package com.back.shared.member.dto
+package com.back.shared.actor.dto
 
-import com.back.boundedContexts.member.domain.Member
+import com.back.shared.actor.domain.Member
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.time.LocalDateTime
 

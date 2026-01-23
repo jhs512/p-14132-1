@@ -1,7 +1,7 @@
 package com.back.boundedContexts.post.post.controller
 
 
-import com.back.boundedContexts.member.app.MemberFacade
+import com.back.shared.actor.app.ActorFacade
 import com.back.boundedContexts.post.`in`.ApiV1PostController
 import com.back.boundedContexts.post.app.PostFacade
 import com.back.standard.dto.PostSearchKeywordType1
@@ -36,7 +36,7 @@ class ApiV1PostControllerTest {
     private lateinit var postFacade: PostFacade
 
     @Autowired
-    private lateinit var memberFacade: MemberFacade
+    private lateinit var actorFacade: ActorFacade
 
 
     @Test
@@ -77,8 +77,8 @@ class ApiV1PostControllerTest {
     @Test
     @DisplayName("글 쓰기, with wrong apiKey, with valid accessToken")
     fun t14() {
-        val actor = memberFacade.findByUsername("user1").getOrThrow()
-        val actorAccessToken = memberFacade.genAccessToken(actor)
+        val actor = actorFacade.findByUsername("user1").getOrThrow()
+        val actorAccessToken = actorFacade.genAccessToken(actor)
 
         val resultActions = mvc
             .perform(
@@ -105,8 +105,8 @@ class ApiV1PostControllerTest {
     @Test
     @DisplayName("글 쓰기, with wrong apiKey cookie, with valid accessToken cookie")
     fun t15() {
-        val actor = memberFacade.findByUsername("user1").getOrThrow()
-        val actorAccessToken = memberFacade.genAccessToken(actor)
+        val actor = actorFacade.findByUsername("user1").getOrThrow()
+        val actorAccessToken = actorFacade.genAccessToken(actor)
 
         val resultActions = mvc
             .perform(

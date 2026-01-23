@@ -1,6 +1,6 @@
 package com.back.global.security
 
-import com.back.boundedContexts.member.app.MemberFacade
+import com.back.shared.actor.app.ActorFacade
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest
 import org.springframework.security.oauth2.core.user.OAuth2User
@@ -19,7 +19,7 @@ private enum class OAuth2Provider {
 
 @Service
 class CustomOAuth2UserService(
-    private val memberFacade: MemberFacade
+    private val actorFacade: ActorFacade
 ) : DefaultOAuth2UserService() {
 
     @Transactional
@@ -59,7 +59,7 @@ class CustomOAuth2UserService(
         val username = "${provider.name}__$oauthUserId"
         val password = ""
 
-        val member = memberFacade.modifyOrJoin(username, password, nickname, profileImgUrl).data
+        val member = actorFacade.modifyOrJoin(username, password, nickname, profileImgUrl).data
 
         return SecurityUser(
             member.id,

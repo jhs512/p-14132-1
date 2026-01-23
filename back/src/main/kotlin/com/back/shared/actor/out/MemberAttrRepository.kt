@@ -1,6 +1,6 @@
-package com.back.boundedContexts.member.out
+package com.back.shared.actor.out
 
-import com.back.boundedContexts.member.domain.MemberAttr
+import com.back.shared.actor.domain.MemberAttr
 import org.springframework.data.jpa.repository.JpaRepository
 
 interface MemberAttrRepository : JpaRepository<MemberAttr, Int>, MemberAttrRepositoryCustom {

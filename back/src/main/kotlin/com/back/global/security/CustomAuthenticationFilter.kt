@@ -1,10 +1,10 @@
 package com.back.global.security
 
-import com.back.boundedContexts.member.domain.Member
-import com.back.boundedContexts.member.app.MemberFacade
 import com.back.global.exceptions.BusinessException
 import com.back.global.rq.Rq
 import com.back.global.rsData.RsData
+import com.back.shared.actor.app.ActorFacade
+import com.back.shared.actor.domain.Member
 import com.back.standard.util.Ut
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
@@ -20,18 +20,18 @@ import org.springframework.web.filter.OncePerRequestFilter
 
 @Component
 class CustomAuthenticationFilter(
-    private val memberFacade: MemberFacade,
+    private val actorFacade: ActorFacade,
     private val rq: Rq,
 ) : OncePerRequestFilter() {
 
     private val publicApiPaths = setOf(
-        "/api/v1/members/login",
-        "/api/v1/members/logout",
-        "/api/v1/members/join",
+        "/api/v1/actors/login",
+        "/api/v1/actors/logout",
+        "/api/v1/actors/join",
     )
 
     private val publicApiPatterns = listOf(
-        Regex("/api/v1/members/\\d+/redirectToProfileImg")
+        Regex("/api/v1/actors/\\d+/redirectToProfileImg")
     )
 
     override fun doFilterInternal(
@@ -96,7 +96,7 @@ class CustomAuthenticationFilter(
     private fun resolveMember(apiKey: String, accessToken: String): Pair<Member, Boolean> {
         memberFromAccessToken(accessToken)?.let { return it to true }
 
-        val member = memberFacade.findByApiKey(apiKey)
+        val member = actorFacade.findByApiKey(apiKey)
             ?: throw BusinessException("401-3", "API 키가 유효하지 않습니다.")
 
         return member to false
@@ -105,7 +105,7 @@ class CustomAuthenticationFilter(
     private fun memberFromAccessToken(token: String): Member? {
         if (token.isBlank()) return null
 
-        val payload = memberFacade.payload(token) ?: return null
+        val payload = actorFacade.payload(token) ?: return null
 
         val id = payload["id"] as Int
         val username = payload["username"] as String
@@ -115,7 +115,7 @@ class CustomAuthenticationFilter(
     }
 
     private fun refreshAccessToken(member: Member) {
-        val newToken = memberFacade.genAccessToken(member)
+        val newToken = actorFacade.genAccessToken(member)
 
         rq.setCookie("accessToken", newToken)
         rq.setHeader(HttpHeaders.AUTHORIZATION, newToken)
