@@ -42,4 +42,16 @@ class MemberProxy(
         set(value) {
             real.password = value
         }
+
+    override var postsCount
+        get() = real.postsCount
+        set(value) {
+            real.postsCount = value
+        }
+
+    override var postCommentsCount
+        get() = real.postCommentsCount
+        set(value) {
+            real.postCommentsCount = value
+        }
 }

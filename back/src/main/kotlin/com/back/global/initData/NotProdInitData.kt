@@ -1,9 +1,9 @@
 package com.back.global.initData
 
+import com.back.boundedContexts.member.app.MemberFacade
 import com.back.boundedContexts.post.app.PostFacade
-import com.back.boundedContexts.post.app.PostMemberService
 import com.back.global.app.CustomConfigProperties
-import com.back.shared.actor.app.ActorFacade
+import com.back.shared.member.app.ActorFacade
 import com.back.standard.extensions.getOrThrow
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.ApplicationRunner
@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional
 class NotProdInitData(
     private val postFacade: PostFacade,
     private val actorFacade: ActorFacade,
-    private val postMemberService: PostMemberService,
+    private val memberFacade: MemberFacade,
     private val customConfigProperties: CustomConfigProperties,
 ) {
     @Lazy
@@ -68,18 +68,18 @@ class NotProdInitData(
     fun work2() {
         if (postFacade.count() > 0) return
 
-        val postUser1 = postMemberService.findByUsername("user1").getOrThrow()
-        val postUser2 = postMemberService.findByUsername("user2").getOrThrow()
-        val postUser3 = postMemberService.findByUsername("user3").getOrThrow()
+        val user1 = memberFacade.findByUsername("user1").getOrThrow()
+        val user2 = memberFacade.findByUsername("user2").getOrThrow()
+        val user3 = memberFacade.findByUsername("user3").getOrThrow()
 
-        val post1 = postFacade.write(postUser1, "제목 1", "내용 1")
-        val post2 = postFacade.write(postUser1, "제목 2", "내용 2")
-        val post3 = postFacade.write(postUser2, "제목 3", "내용 3")
+        val post1 = postFacade.write(user1, "제목 1", "내용 1")
+        val post2 = postFacade.write(user1, "제목 2", "내용 2")
+        val post3 = postFacade.write(user2, "제목 3", "내용 3")
 
-        postFacade.writeComment(postUser1, post1, "댓글 1-1")
-        postFacade.writeComment(postUser1, post1, "댓글 1-2")
-        postFacade.writeComment(postUser2, post1, "댓글 1-3")
-        postFacade.writeComment(postUser3, post2, "댓글 2-1")
-        postFacade.writeComment(postUser3, post2, "댓글 2-2")
+        postFacade.writeComment(user1, post1, "댓글 1-1")
+        postFacade.writeComment(user1, post1, "댓글 1-2")
+        postFacade.writeComment(user2, post1, "댓글 1-3")
+        postFacade.writeComment(user3, post2, "댓글 2-1")
+        postFacade.writeComment(user3, post2, "댓글 2-2")
     }
 }

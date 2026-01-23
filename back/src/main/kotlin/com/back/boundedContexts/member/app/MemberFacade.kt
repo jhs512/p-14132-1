@@ -2,7 +2,7 @@ package com.back.boundedContexts.member.app
 
 import com.back.global.exceptions.BusinessException
 import com.back.global.rsData.RsData
-import com.back.shared.actor.app.AuthTokenService
+import com.back.shared.member.app.AuthTokenService
 import com.back.shared.member.domain.Member
 import com.back.shared.member.out.MemberRepository
 import com.back.standard.dto.MemberSearchKeywordType1

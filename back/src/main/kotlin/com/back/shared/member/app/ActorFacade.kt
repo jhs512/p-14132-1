@@ -1,4 +1,4 @@
-package com.back.shared.actor.app
+package com.back.shared.member.app
 
 import com.back.global.exceptions.BusinessException
 import com.back.global.rsData.RsData

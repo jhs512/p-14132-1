@@ -1,7 +1,7 @@
 package com.back.global.security
 
 import com.back.global.rq.Rq
-import com.back.shared.actor.app.ActorFacade
+import com.back.shared.member.app.ActorFacade
 import com.back.standard.extensions.base64Decode
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse

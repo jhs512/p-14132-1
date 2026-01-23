@@ -3,8 +3,8 @@ package com.back.boundedContexts.post.app
 import com.back.boundedContexts.post.domain.Post
 import com.back.boundedContexts.post.domain.PostComment
 import kotlin.jvm.optionals.getOrNull
-import com.back.boundedContexts.post.domain.PostMember
 import com.back.boundedContexts.post.out.PostRepository
+import com.back.shared.member.domain.Member
 import com.back.shared.post.dto.PostCommentDto
 import com.back.shared.post.dto.PostDto
 import com.back.shared.post.dto.PostUserDto
@@ -23,7 +23,7 @@ class PostFacade(
 ) {
     fun count(): Long = postRepository.count()
 
-    fun write(author: PostMember, title: String, content: String): Post {
+    fun write(author: Member, title: String, content: String): Post {
         val post = Post(author, title, content)
 
         author.incrementPostsCount()
@@ -39,7 +39,7 @@ class PostFacade(
         post.modify(title, content)
     }
 
-    fun writeComment(author: PostMember, post: Post, content: String): PostComment {
+    fun writeComment(author: Member, post: Post, content: String): PostComment {
         val postComment = post.addComment(author, content)
 
         postRepository.flush()

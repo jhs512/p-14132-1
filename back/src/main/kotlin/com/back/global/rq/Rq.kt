@@ -1,10 +1,7 @@
 package com.back.global.rq
 
-import com.back.boundedContexts.post.app.PostMemberService
-import com.back.boundedContexts.post.domain.PostMember
-import com.back.boundedContexts.post.domain.PostMemberProxy
 import com.back.global.security.SecurityUser
-import com.back.shared.actor.app.ActorFacade
+import com.back.shared.member.app.ActorFacade
 import com.back.shared.member.domain.Member
 import com.back.shared.member.domain.MemberProxy
 import jakarta.servlet.http.Cookie
@@ -18,25 +15,12 @@ class Rq(
     private val req: HttpServletRequest,
     private val resp: HttpServletResponse,
     private val actorFacade: ActorFacade,
-    private val postMemberService: PostMemberService,
 ) {
     val actor: Member
         get() = (SecurityContextHolder.getContext()?.authentication?.principal as? SecurityUser)
             ?.let {
                 MemberProxy(
                     actorFacade.getReferenceById(it.id),
-                    it.id,
-                    it.username,
-                    it.nickname
-                )
-            }
-            ?: throw IllegalStateException("인증된 사용자가 없습니다.")
-
-    val postActor: PostMember
-        get() = (SecurityContextHolder.getContext()?.authentication?.principal as? SecurityUser)
-            ?.let {
-                PostMemberProxy(
-                    postMemberService.getReferenceById(it.id),
                     it.id,
                     it.username,
                     it.nickname

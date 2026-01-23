@@ -1,4 +1,4 @@
-package com.back.shared.actor.app
+package com.back.shared.member.app
 
 import com.back.shared.member.domain.Member
 import com.back.standard.util.Ut

@@ -24,14 +24,24 @@ class SecurityConfig(
     @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
         http {
-            // 요청 경로별 인가 설정
             authorizeHttpRequests {
+                // ================================
+                // 공통
+                // ================================
                 authorize("/favicon.ico", permitAll)
                 authorize("/h2-console/**", permitAll)
+
+                // ================================
+                // Post 모듈
+                // ================================
                 authorize(HttpMethod.GET, "/api/*/posts/{id:\\d+}", permitAll)
                 authorize(HttpMethod.GET, "/api/*/posts", permitAll)
                 authorize(HttpMethod.GET, "/api/*/posts/{postId:\\d+}/comments", permitAll)
                 authorize(HttpMethod.GET, "/api/*/posts/{postId:\\d+}/comments/{id:\\d+}", permitAll)
+
+                // ================================
+                // Member 모듈
+                // ================================
                 authorize("/api/*/actors/login", permitAll)
                 authorize("/api/*/actors/logout", permitAll)
                 authorize(HttpMethod.POST, "/api/*/actors", permitAll)
@@ -40,7 +50,15 @@ class SecurityConfig(
                 authorize("/api/*/members/logout", permitAll)
                 authorize(HttpMethod.POST, "/api/*/members", permitAll)
                 authorize(HttpMethod.GET, "/api/*/members/{id:\\d+}/redirectToProfileImg", permitAll)
+
+                // ================================
+                // Admin
+                // ================================
                 authorize("/api/*/adm/**", hasRole("ADMIN"))
+
+                // ================================
+                // 기본 규칙
+                // ================================
                 authorize("/api/*/**", authenticated)
                 authorize(anyRequest, permitAll)
             }

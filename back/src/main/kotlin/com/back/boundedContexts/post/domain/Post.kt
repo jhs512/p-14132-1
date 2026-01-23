@@ -2,6 +2,7 @@ package com.back.boundedContexts.post.domain
 
 import com.back.global.exceptions.BusinessException
 import com.back.global.jpa.entity.BaseTime
+import com.back.shared.member.domain.Member
 import jakarta.persistence.CascadeType.PERSIST
 import jakarta.persistence.CascadeType.REMOVE
 import jakarta.persistence.Entity
@@ -12,7 +13,7 @@ import jakarta.persistence.OneToOne
 
 @Entity
 class Post(
-    @field:ManyToOne(fetch = LAZY) val author: PostMember,
+    @field:ManyToOne(fetch = LAZY) val author: Member,
     var title: String,
     content: String
 ) : BaseTime() {
@@ -40,7 +41,7 @@ class Post(
         this.content = content
     }
 
-    fun addComment(author: PostMember, content: String): PostComment {
+    fun addComment(author: Member, content: String): PostComment {
         val postComment = PostComment(author, this, content)
         comments.add(postComment)
 
@@ -57,11 +58,11 @@ class Post(
         return comments.remove(postComment)
     }
 
-    fun checkActorCanModify(actor: PostMember) {
+    fun checkActorCanModify(actor: Member) {
         if (author != actor) throw BusinessException("403-1", "${id}번 글 수정권한이 없습니다.")
     }
 
-    fun checkActorCanDelete(actor: PostMember) {
+    fun checkActorCanDelete(actor: Member) {
         if (author != actor) throw BusinessException("403-2", "${id}번 글 삭제권한이 없습니다.")
     }
 }

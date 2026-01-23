@@ -1,6 +1,6 @@
 package com.back.global.security
 
-import com.back.shared.actor.app.ActorFacade
+import com.back.shared.member.app.ActorFacade
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest
 import org.springframework.security.oauth2.core.user.OAuth2User

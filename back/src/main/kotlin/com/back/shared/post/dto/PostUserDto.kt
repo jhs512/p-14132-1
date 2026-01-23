@@ -1,6 +1,6 @@
 package com.back.shared.post.dto
 
-import com.back.boundedContexts.post.domain.PostMember
+import com.back.shared.member.domain.Member
 import java.time.LocalDateTime
 
 data class PostUserDto(
@@ -12,13 +12,13 @@ data class PostUserDto(
     val postsCount: Int,
     val postCommentsCount: Int,
 ) {
-    constructor(postMember: PostMember) : this(
-        postMember.id,
-        postMember.createDate,
-        postMember.modifyDate,
-        postMember.name,
-        postMember.redirectToProfileImgUrlOrDefault,
-        postMember.postsCount,
-        postMember.postCommentsCount
+    constructor(member: Member) : this(
+        member.id,
+        member.createDate,
+        member.modifyDate,
+        member.name,
+        member.redirectToProfileImgUrlOrDefault,
+        member.postsCount,
+        member.postCommentsCount
     )
 }
