@@ -28,11 +28,7 @@ class BaseMember(
         return id == other.id
     }
 
-    override fun hashCode(): Int {
-        var result = super.hashCode()
-        result = 31 * result + id.hashCode()
-        return result
-    }
+    override fun hashCode(): Int = id.hashCode()
 
     @delegate:Transient
     val profileImgUrlAttr by lazy {
