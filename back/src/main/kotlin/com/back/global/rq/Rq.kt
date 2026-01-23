@@ -5,8 +5,8 @@ import com.back.boundedContexts.post.domain.PostMember
 import com.back.boundedContexts.post.domain.PostMemberProxy
 import com.back.global.security.SecurityUser
 import com.back.shared.actor.app.ActorFacade
-import com.back.shared.actor.domain.Member
-import com.back.shared.actor.domain.MemberProxy
+import com.back.shared.member.domain.Member
+import com.back.shared.member.domain.MemberProxy
 import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse

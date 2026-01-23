@@ -4,7 +4,7 @@ import com.back.global.exceptions.BusinessException
 import com.back.global.rq.Rq
 import com.back.global.rsData.RsData
 import com.back.shared.actor.app.ActorFacade
-import com.back.shared.actor.domain.Member
+import com.back.shared.member.domain.Member
 import com.back.standard.util.Ut
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
@@ -25,13 +25,13 @@ class CustomAuthenticationFilter(
 ) : OncePerRequestFilter() {
 
     private val publicApiPaths = setOf(
-        "/api/v1/actors/login",
-        "/api/v1/actors/logout",
-        "/api/v1/actors/join",
+        "/api/v1/members/login",
+        "/api/v1/members/logout",
+        "/api/v1/members/join",
     )
 
     private val publicApiPatterns = listOf(
-        Regex("/api/v1/actors/\\d+/redirectToProfileImg")
+        Regex("/api/v1/members/\\d+/redirectToProfileImg")
     )
 
     override fun doFilterInternal(

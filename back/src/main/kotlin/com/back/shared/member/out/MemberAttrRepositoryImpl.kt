@@ -1,7 +1,7 @@
-package com.back.shared.actor.out
+package com.back.shared.member.out
 
-import com.back.shared.actor.domain.Member
-import com.back.shared.actor.domain.MemberAttr
+import com.back.shared.member.domain.Member
+import com.back.shared.member.domain.MemberAttr
 import jakarta.persistence.EntityManager
 import org.hibernate.Session
 

@@ -1,7 +1,7 @@
 package com.back.boundedContexts.member.member.repository
 
-import com.back.shared.actor.domain.MemberProxy
-import com.back.shared.actor.out.MemberRepository
+import com.back.shared.member.domain.MemberProxy
+import com.back.shared.member.out.MemberRepository
 import com.back.standard.extensions.getOrThrow
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
@@ -299,7 +299,7 @@ class MemberRepositoryTest {
         assertThat(member.username).isEqualTo("system")
         assertThat(member.nickname).isEqualTo("시스템")
         assertThat(member.name).isEqualTo("시스템")
-        assertThat(member.redirectToProfileImgUrlOrDefault).endsWith("/api/v1/actors/1/redirectToProfileImg")
+        assertThat(member.redirectToProfileImgUrlOrDefault).endsWith("/api/v1/members/1/redirectToProfileImg")
         assertThat(member.isAdmin).isEqualTo(true)
         assertThat(member.authorities).hasSize(1)
         assertThat(member.authoritiesAsStringList).containsExactly("ROLE_ADMIN")

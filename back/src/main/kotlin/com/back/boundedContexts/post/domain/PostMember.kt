@@ -1,7 +1,7 @@
 package com.back.boundedContexts.post.domain
 
 import com.back.boundedContexts.post.out.PostUserAttrRepository
-import com.back.shared.actor.domain.BaseMember
+import com.back.shared.member.domain.BaseMember
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Table

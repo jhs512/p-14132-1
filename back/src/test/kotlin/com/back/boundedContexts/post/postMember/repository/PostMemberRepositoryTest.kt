@@ -33,7 +33,7 @@ class PostMemberRepositoryTest {
         assertThat(postUser.id).isEqualTo(1)
         assertThat(postUser.username).isEqualTo("system")
         assertThat(postUser.name).isEqualTo("시스템")
-        assertThat(postUser.redirectToProfileImgUrlOrDefault).endsWith("/api/v1/actors/1/redirectToProfileImg")
+        assertThat(postUser.redirectToProfileImgUrlOrDefault).endsWith("/api/v1/members/1/redirectToProfileImg")
         assertThat(postUser.isAdmin).isEqualTo(true)
         assertThat(postUser.authorities).hasSize(1)
         assertThat(postUser.authoritiesAsStringList).containsExactly("ROLE_ADMIN")

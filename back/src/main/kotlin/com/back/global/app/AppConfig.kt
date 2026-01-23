@@ -2,10 +2,10 @@ package com.back.global.app
 
 import com.back.boundedContexts.post.domain.PostMember
 import com.back.boundedContexts.post.out.PostUserAttrRepository
-import com.back.shared.actor.domain.BaseMember
-import com.back.shared.actor.domain.Member
-import com.back.shared.actor.out.MemberAttrRepository
-import com.back.shared.actor.out.MemberRepository
+import com.back.shared.member.domain.BaseMember
+import com.back.shared.member.domain.Member
+import com.back.shared.member.out.MemberAttrRepository
+import com.back.shared.member.out.MemberRepository
 import com.back.standard.util.Ut
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

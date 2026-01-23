@@ -1,8 +1,8 @@
-package com.back.shared.actor.domain
+package com.back.shared.member.domain
 
 import com.back.global.jpa.entity.BaseTime
-import com.back.shared.actor.out.MemberAttrRepository
-import com.back.shared.actor.out.MemberRepository
+import com.back.shared.member.out.MemberAttrRepository
+import com.back.shared.member.out.MemberRepository
 import jakarta.persistence.Column
 import jakarta.persistence.MappedSuperclass
 import org.hibernate.annotations.NaturalId
@@ -48,7 +48,7 @@ class BaseMember(
         }
 
     val redirectToProfileImgUrlOrDefault: String
-        get() = "http://localhost:8080/api/v1/actors/${id}/redirectToProfileImg"
+        get() = "http://localhost:8080/api/v1/members/${id}/redirectToProfileImg"
 
     val profileImgUrlOrDefault: String
         get() = profileImgUrl

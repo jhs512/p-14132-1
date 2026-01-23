@@ -1,4 +1,4 @@
-package com.back.shared.actor.domain
+package com.back.shared.member.domain
 
 class MemberProxy(
     private val real: Member,

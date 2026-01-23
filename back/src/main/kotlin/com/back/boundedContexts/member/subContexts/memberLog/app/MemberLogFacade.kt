@@ -2,7 +2,7 @@ package com.back.boundedContexts.member.subContexts.memberLog.app
 
 import com.back.boundedContexts.member.subContexts.memberLog.domain.MemberLog
 import com.back.boundedContexts.member.subContexts.memberLog.out.MemberLogRepository
-import com.back.shared.actor.domain.Member
+import com.back.shared.member.domain.Member
 import com.back.boundedContexts.post.domain.Post
 import com.back.boundedContexts.post.domain.PostComment
 import com.back.shared.post.event.PostCommentWrittenEvent

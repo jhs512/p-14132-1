@@ -1,6 +1,6 @@
-package com.back.shared.actor.domain
+package com.back.shared.member.domain
 
-import com.back.shared.actor.out.MemberAttrRepository
+import com.back.shared.member.out.MemberAttrRepository
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import java.util.*

@@ -1,16 +1,15 @@
-package com.back.shared.actor.dto
+package com.back.shared.member.dto
 
-import com.back.shared.actor.domain.Member
+import com.back.shared.member.domain.Member
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.time.LocalDateTime
 
-data class MemberWithUsernameDto(
+data class MemberDto(
     val id: Int,
     val createDate: LocalDateTime,
     val modifyDate: LocalDateTime,
     @get:JsonProperty("isAdmin")
     val isAdmin: Boolean,
-    val username: String,
     val name: String,
     val profileImageUrl: String,
 ) {
@@ -19,7 +18,6 @@ data class MemberWithUsernameDto(
         member.createDate,
         member.modifyDate,
         member.isAdmin,
-        member.username,
         member.name,
         member.redirectToProfileImgUrlOrDefault
     )
