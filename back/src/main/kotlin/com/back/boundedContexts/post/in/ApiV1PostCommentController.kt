@@ -2,7 +2,6 @@ package com.back.boundedContexts.post.`in`
 
 import com.back.boundedContexts.post.app.PostFacade
 import com.back.shared.post.dto.PostCommentDto
-import com.back.boundedContexts.post.app.PostMemberService
 import com.back.global.rq.Rq
 import com.back.global.rsData.RsData
 import com.back.standard.extensions.getOrThrow
@@ -28,8 +27,7 @@ import org.springframework.web.bind.annotation.RestController
 @SecurityRequirement(name = "bearerAuth")
 class ApiV1PostCommentController(
     private val postFacade: PostFacade,
-    private val rq: Rq,
-    private val postMemberService: PostMemberService
+    private val rq: Rq
 ) {
     val actor
         get() = rq.postActor

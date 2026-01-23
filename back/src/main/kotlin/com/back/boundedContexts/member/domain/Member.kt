@@ -1,6 +1,7 @@
 package com.back.boundedContexts.member.domain
 
 import com.back.boundedContexts.member.out.MemberAttrRepository
+import com.back.shared.member.domain.BaseMember
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import java.util.*
