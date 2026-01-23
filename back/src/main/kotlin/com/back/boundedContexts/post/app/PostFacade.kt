@@ -2,6 +2,7 @@ package com.back.boundedContexts.post.app
 
 import com.back.boundedContexts.post.domain.Post
 import com.back.boundedContexts.post.domain.PostComment
+import kotlin.jvm.optionals.getOrNull
 import com.back.boundedContexts.post.domain.PostMember
 import com.back.boundedContexts.post.out.PostRepository
 import com.back.shared.post.dto.PostCommentDto
@@ -20,9 +21,7 @@ class PostFacade(
     private val postRepository: PostRepository,
     private val publisher: ApplicationEventPublisher,
 ) {
-    fun count(): Long {
-        return postRepository.count()
-    }
+    fun count(): Long = postRepository.count()
 
     fun write(author: PostMember, title: String, content: String): Post {
         val post = Post(author, title, content)
@@ -32,11 +31,9 @@ class PostFacade(
         return postRepository.save(post)
     }
 
-    fun findById(id: Int): Post? = postRepository.findById(id).orElse(null)
+    fun findById(id: Int): Post? = postRepository.findById(id).getOrNull()
 
-    fun findAll(): List<Post> {
-        return postRepository.findAll()
-    }
+    fun findAll(): List<Post> = postRepository.findAll()
 
     fun modify(post: Post, title: String, content: String) {
         post.modify(title, content)
@@ -58,9 +55,8 @@ class PostFacade(
         return postComment
     }
 
-    fun deleteComment(post: Post, postComment: PostComment): Boolean {
-        return post.deleteComment(postComment)
-    }
+    fun deleteComment(post: Post, postComment: PostComment): Boolean =
+        post.deleteComment(postComment)
 
     fun modifyComment(postComment: PostComment, content: String) {
         postComment.modify(content)
@@ -72,13 +68,9 @@ class PostFacade(
         postRepository.delete(post)
     }
 
-    fun findLatest(): Post? {
-        return postRepository.findFirstByOrderByIdDesc()
-    }
+    fun findLatest(): Post? = postRepository.findFirstByOrderByIdDesc()
 
-    fun flush() {
-        postRepository.flush()
-    }
+    fun flush() = postRepository.flush()
 
     fun findPagedByKw(
         kwType: PostSearchKeywordType1,

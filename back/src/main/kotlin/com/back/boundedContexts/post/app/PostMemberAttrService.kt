@@ -12,65 +12,23 @@ class PostMemberAttrService(
     fun findBySubjectAndName(subject: PostMember, name: String) =
         postUserAttrRepository.findBySubjectAndName(subject, name)
 
-    fun incrementPostsCount(subject: PostMember) {
-        val attr = findBySubjectAndName(subject, "postsCount")
+    private fun updateCount(subject: PostMember, attrName: String, delta: Int) {
+        val attr = findBySubjectAndName(subject, attrName)
+        val newValue = ((attr?.value?.toIntOrNull() ?: 0) + delta).toString()
 
-        if (attr == null) {
-            postUserAttrRepository.save(PostMemberAttr(subject, "postsCount", "1"))
-        } else {
-            val currentCount = attr.value.toIntOrNull() ?: 0
-            attr.value = (currentCount + 1).toString()
-            postUserAttrRepository.save(attr)
-        }
+        postUserAttrRepository.save(
+            attr?.apply { value = newValue } ?: PostMemberAttr(subject, attrName, newValue)
+        )
     }
 
-    fun decrementPostsCount(subject: PostMember) {
-        val attr = findBySubjectAndName(subject, "postsCount")
+    private fun getCount(subject: PostMember, attrName: String): Int =
+        findBySubjectAndName(subject, attrName)?.value?.toIntOrNull() ?: 0
 
-        if (attr == null) {
-            postUserAttrRepository.save(PostMemberAttr(subject, "postsCount", "-1"))
-        } else {
-            val currentCount = attr.value.toIntOrNull() ?: 0
-            attr.value = (currentCount - 1).toString()
-            postUserAttrRepository.save(attr)
-        }
-    }
+    fun incrementPostsCount(subject: PostMember) = updateCount(subject, "postsCount", 1)
+    fun decrementPostsCount(subject: PostMember) = updateCount(subject, "postsCount", -1)
+    fun incrementPostCommentsCount(subject: PostMember) = updateCount(subject, "postCommentsCount", 1)
+    fun decrementPostCommentsCount(subject: PostMember) = updateCount(subject, "postCommentsCount", -1)
 
-    fun incrementPostCommentsCount(subject: PostMember) {
-        val attr = findBySubjectAndName(subject, "postCommentsCount")
-
-        if (attr == null) {
-            postUserAttrRepository.save(PostMemberAttr(subject, "postCommentsCount", "1"))
-        } else {
-            val currentCount = attr.value.toIntOrNull() ?: 0
-            attr.value = (currentCount + 1).toString()
-            postUserAttrRepository.save(attr)
-        }
-    }
-
-    fun decrementPostCommentsCount(subject: PostMember) {
-        val attr = findBySubjectAndName(subject, "postCommentsCount")
-
-        if (attr == null) {
-            postUserAttrRepository.save(PostMemberAttr(subject, "postCommentsCount", "-1"))
-        } else {
-            val currentCount = attr.value.toIntOrNull() ?: 0
-            attr.value = (currentCount - 1).toString()
-            postUserAttrRepository.save(attr)
-        }
-    }
-
-    fun getPostsCount(subject: PostMember): Int {
-        val attr = findBySubjectAndName(subject, "postsCount")
-        val count = attr?.value?.toIntOrNull() ?: 0
-
-        return count
-    }
-
-    fun getPostCommentsCount(subject: PostMember): Int {
-        val attr = findBySubjectAndName(subject, "postCommentsCount")
-        val count = attr?.value?.toIntOrNull() ?: 0
-
-        return count
-    }
+    fun getPostsCount(subject: PostMember) = getCount(subject, "postsCount")
+    fun getPostCommentsCount(subject: PostMember) = getCount(subject, "postCommentsCount")
 }

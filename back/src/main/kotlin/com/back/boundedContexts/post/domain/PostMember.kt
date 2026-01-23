@@ -1,6 +1,6 @@
 package com.back.boundedContexts.post.domain
 
-import com.back.boundedContexts.member.domain.BaseMember
+import com.back.shared.member.domain.BaseMember
 import com.back.boundedContexts.post.out.PostUserAttrRepository
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -13,8 +13,11 @@ import org.hibernate.annotations.Immutable
 class PostMember(
     id: Int,
     username: String,
-    @field:Column(name = "nickname") var name: String
+    @field:Column(name = "nickname") var nickname: String
 ) : BaseMember(id, username) {
+
+    val name: String
+        get() = nickname
 
     companion object {
         lateinit var attrRepository: PostUserAttrRepository

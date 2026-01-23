@@ -49,9 +49,7 @@ class Post(
         return postComment
     }
 
-    fun findCommentById(id: Int): PostComment? {
-        return comments.find { it.id == id }
-    }
+    fun findCommentById(id: Int): PostComment? = comments.find { it.id == id }
 
     fun deleteComment(postComment: PostComment): Boolean {
         postComment.author.decrementPostCommentsCount()

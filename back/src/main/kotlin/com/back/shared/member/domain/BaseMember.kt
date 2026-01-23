@@ -1,8 +1,8 @@
-package com.back.boundedContexts.member.domain
+package com.back.shared.member.domain
 
+import com.back.boundedContexts.member.domain.MemberAttr
 import com.back.boundedContexts.member.out.MemberAttrRepository
 import com.back.boundedContexts.member.out.MemberRepository
-import com.back.global.jpa.entity.BaseEntity
 import com.back.global.jpa.entity.BaseTime
 import jakarta.persistence.Column
 import jakarta.persistence.MappedSuperclass
@@ -24,9 +24,8 @@ class BaseMember(
 
     override fun equals(other: Any?): Boolean {
         if (other === this) return true
-        if (other == null || other !is BaseMember) return false
-        val that = other as BaseEntity
-        return id == that.id
+        if (other !is BaseMember) return false
+        return id == other.id
     }
 
     override fun hashCode(): Int {
@@ -62,21 +61,10 @@ class BaseMember(
             ?: "https://placehold.co/600x600?text=U_U"
 
     val isAdmin: Boolean
-        get() {
-            if ("system" == username) return true
-            if ("admin" == username) return true
-
-            return false
-        }
+        get() = username in setOf("system", "admin")
 
     val authoritiesAsStringList: List<String>
-        get() {
-            val authorities = mutableListOf<String>()
-
-            if (isAdmin) authorities.add("ROLE_ADMIN")
-
-            return authorities
-        }
+        get() = buildList { if (isAdmin) add("ROLE_ADMIN") }
 
     val authorities: Collection<GrantedAuthority>
         get() = authoritiesAsStringList.map { SimpleGrantedAuthority(it) }

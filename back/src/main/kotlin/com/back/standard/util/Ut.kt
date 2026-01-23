@@ -14,14 +14,12 @@ object Ut {
 
             val secretKey = Keys.hmacShaKeyFor(secret.toByteArray())
 
-            val jwt = Jwts.builder()
+            return Jwts.builder()
                 .claims(body)
                 .issuedAt(issuedAt)
                 .expiration(expiration)
                 .signWith(secretKey)
                 .compact()
-
-            return jwt
         }
 
         fun isValid(secret: String, jwtStr: String): Boolean {
@@ -98,9 +96,7 @@ object Ut {
         }
 
         fun runAsync(vararg args: String) {
-            Thread(Runnable {
-                run(*args)
-            }).start()
+            kotlin.concurrent.thread { run(*args) }
         }
     }
 }

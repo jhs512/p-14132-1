@@ -1,6 +1,6 @@
 package com.back.global.app
 
-import com.back.boundedContexts.member.domain.BaseMember
+import com.back.shared.member.domain.BaseMember
 import com.back.boundedContexts.member.domain.Member
 import com.back.boundedContexts.member.out.MemberAttrRepository
 import com.back.boundedContexts.member.out.MemberRepository
@@ -32,9 +32,7 @@ class AppConfig(
     }
 
     @Bean
-    fun passwordEncoder(): PasswordEncoder {
-        return BCryptPasswordEncoder()
-    }
+    fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder()
 
     companion object {
         private lateinit var environment: Environment

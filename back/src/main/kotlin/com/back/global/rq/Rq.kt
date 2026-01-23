@@ -21,46 +21,31 @@ class Rq(
     private val postMemberService: PostMemberService,
 ) {
     val actor: Member
-        get() = SecurityContextHolder
-            .getContext()
-            ?.authentication
-            ?.principal
+        get() = (SecurityContextHolder.getContext()?.authentication?.principal as? SecurityUser)
             ?.let {
-                if (it is SecurityUser) {
-                    MemberProxy(
-                        memberFacade.getReferenceById(it.id),
-                        it.id,
-                        it.username,
-                        it.nickname
-                    )
-                } else {
-                    null
-                }
+                MemberProxy(
+                    memberFacade.getReferenceById(it.id),
+                    it.id,
+                    it.username,
+                    it.nickname
+                )
             }
             ?: throw IllegalStateException("인증된 사용자가 없습니다.")
 
     val postActor: PostMember
-        get() = SecurityContextHolder
-            .getContext()
-            ?.authentication
-            ?.principal
+        get() = (SecurityContextHolder.getContext()?.authentication?.principal as? SecurityUser)
             ?.let {
-                if (it is SecurityUser) {
-                    PostMemberProxy(
-                        postMemberService.getReferenceById(it.id),
-                        it.id,
-                        it.username,
-                        it.nickname
-                    )
-                } else {
-                    null
-                }
+                PostMemberProxy(
+                    postMemberService.getReferenceById(it.id),
+                    it.id,
+                    it.username,
+                    it.nickname
+                )
             }
             ?: throw IllegalStateException("인증된 사용자가 없습니다.")
 
-    fun getHeader(name: String, defaultValue: String): String {
-        return req.getHeader(name) ?: defaultValue
-    }
+    fun getHeader(name: String, defaultValue: String): String =
+        req.getHeader(name) ?: defaultValue
 
     fun setHeader(name: String, value: String) {
         resp.setHeader(name, value)

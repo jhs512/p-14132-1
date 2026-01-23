@@ -12,7 +12,5 @@ class JpaConfig {
     private lateinit var entityManager: EntityManager
 
     @Bean
-    fun jpaQueryFactory(): JPAQueryFactory {
-        return JPAQueryFactory(entityManager)
-    }
+    fun jpaQueryFactory(): JPAQueryFactory = JPAQueryFactory(entityManager)
 }

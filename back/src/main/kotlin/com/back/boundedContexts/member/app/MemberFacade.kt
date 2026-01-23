@@ -2,6 +2,7 @@ package com.back.boundedContexts.member.app
 
 import com.back.boundedContexts.member.domain.Member
 import com.back.boundedContexts.member.out.MemberRepository
+import kotlin.jvm.optionals.getOrNull
 import com.back.global.exceptions.BusinessException
 import com.back.global.rsData.RsData
 import com.back.standard.dto.MemberSearchKeywordType1
@@ -45,7 +46,7 @@ class MemberFacade(
 
     fun payload(accessToken: String): Map<String, Any>? = authTokenService.payload(accessToken)
 
-    fun findById(id: Int): Member? = memberRepository.findById(id).orElse(null)
+    fun findById(id: Int): Member? = memberRepository.findById(id).getOrNull()
 
     fun findAll(): List<Member> = memberRepository.findAll()
 

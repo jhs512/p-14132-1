@@ -3,7 +3,7 @@ package com.back.shared.post.dto
 import com.back.boundedContexts.post.domain.PostComment
 import java.time.LocalDateTime
 
-class PostCommentDto private constructor(
+data class PostCommentDto(
     val id: Int,
     val createDate: LocalDateTime,
     val modifyDate: LocalDateTime,
