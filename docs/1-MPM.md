@@ -12,13 +12,14 @@ MPM은 **하나의 프로젝트(모노리스)에서 MSA의 장점을 취하는 �
 
 ```
 boundedContexts/
-├── member/          # 회원 컨텍스트
-├── post/            # 게시물 컨텍스트
-└── home/            # 홈 컨텍스트
+├── member/           # 회원 컨텍스트
+├── post/             # 게시물 컨텍스트
+├── home/             # 홈 컨텍스트
+└── sharedContexts/   # 공유 컨텍스트 (여러 BC에서 참조하는 도메인)
 ```
 
 - 각 Bounded Context는 독립적인 도메인 영역
-- Context 간 직접 참조 금지
+- Context 간 직접 참조 금지 (sharedContexts를 통해서만 공유)
 
 ### 2. 레이어 구조 (in → app → domain)
 
@@ -26,15 +27,18 @@ boundedContexts/
 
 ```
 member/
-├── in/      # 인바운드 (Controller, EventListener)
-├── app/     # 애플리케이션 (Facade, Service)
-├── domain/  # 도메인 (Entity, Value Object)
-└── out/     # 아웃바운드 (Repository)
+├── in/       # 인바운드 (Controller, EventListener, InitData)
+├── app/      # 애플리케이션 (Facade, Service)
+├── config/   # 설정 (Spring Config, Security Config)
+├── domain/   # 도메인 (Entity, Value Object)
+├── dto/      # DTO (Request/Response)
+├── event/    # 도메인 이벤트
+└── out/      # 아웃바운드 (Repository)
 ```
 
 #### in (인바운드)
 
-- 외부 요청의 진입점 (REST Controller, Event Listener 등)
+- 외부 요청의 진입점 (REST Controller, Event Listener, InitData 등)
 - **오직 Facade만 사용 가능**
 - Service, Repository, Domain 직접 접근 금지
 
@@ -43,27 +47,50 @@ member/
 - Facade: in 레이어에 노출되는 유일한 인터페이스
 - Service: 내부 비즈니스 로직 (Facade에서만 호출)
 
+#### config (설정)
+
+- Spring Configuration 클래스
+- SecurityConfig (해당 BC의 URL 권한 설정)
+- AppConfig (해당 BC 전용 Bean 설정)
+
 #### domain (도메인)
 
 - Entity, Value Object, Domain Event
 - 비즈니스 규칙 캡슐화
+
+#### dto (데이터 전송 객체)
+
+- Request/Response DTO
+- 해당 BC 전용 DTO
+
+#### event (도메인 이벤트)
+
+- 다른 BC에 발행하는 도메인 이벤트
+- ApplicationEventPublisher를 통해 발행
 
 #### out (아웃바운드)
 
 - Repository, 외부 시스템 연동
 - app 레이어에서만 접근
 
-### 3. shared 모듈
+### 3. sharedContexts 모듈
+
+여러 Bounded Context에서 공통으로 참조해야 하는 도메인을 담는 특수한 컨텍스트:
 
 ```
-shared/
-├── member/
-│   ├── domain/   # 공유 도메인 (BaseMember)
-│   └── dto/      # 공유 DTO
-└── post/
-    ├── dto/      # 공유 DTO
-    └── event/    # 도메인 이벤트
+boundedContexts/sharedContexts/
+└── member/
+    ├── app/      # ActorFacade, AuthTokenService
+    ├── domain/   # Member, MemberAttr, MemberProxy
+    ├── dto/      # AccessTokenPayload
+    └── out/      # MemberRepository, MemberAttrRepository
 ```
+
+#### sharedContexts 사용 원칙
+
+- **읽기 전용 참조**: 다른 BC에서는 sharedContexts의 도메인을 읽기만 함
+- **수정은 소유 BC에서**: Member 수정은 member BC의 MemberFacade를 통해서만
+- **최소한의 노출**: 정말 공유가 필요한 것만 sharedContexts에 배치
 
 ### 4. Context 간 통신
 
@@ -73,7 +100,7 @@ shared/
 
 #### 비동기 통신
 
-- shared의 Event를 통한 이벤트 발행/구독
+- 각 BC의 event 패키지를 통한 이벤트 발행/구독
 - `ApplicationEventPublisher` 활용
 
 ```kotlin
@@ -102,7 +129,7 @@ in → app → domain
 - `in` → `app` (Facade만)
 - `app` → `domain`
 - `app` → `out`
-- 모든 레이어 → `shared`
+- 모든 레이어 → `sharedContexts`
 - 모든 레이어 → `global`
 - 모든 레이어 → `standard`
 
@@ -111,7 +138,7 @@ in → app → domain
 - `in` → `domain` (직접 접근)
 - `in` → `out` (직접 접근)
 - `in` → `app`의 Service (Facade만 허용)
-- Context A → Context B
+- Context A → Context B (sharedContexts 제외)
 
 ## 장점
 
@@ -129,7 +156,9 @@ in → app → domain
 member/
 ├── in/
 ├── app/
+├── config/
 ├── domain/
+├── dto/
 ├── out/
 └── subContexts/
     └── memberLog/
@@ -140,3 +169,17 @@ member/
 ```
 
 subContext도 동일한 레이어 규칙을 따른다.
+
+## global vs standard
+
+### global
+
+- 프로젝트 전반에 걸친 인프라/설정
+- Spring Security, Exception Handler, Rq, AppConfig 등
+- 프레임워크/인프라 의존적
+
+### standard
+
+- 순수 유틸리티, 확장 함수, 공용 DTO
+- 프레임워크 비의존적
+- 어디서든 사용 가능
