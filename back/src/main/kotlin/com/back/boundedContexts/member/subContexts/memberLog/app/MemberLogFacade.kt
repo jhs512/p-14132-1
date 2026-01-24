@@ -2,10 +2,10 @@ package com.back.boundedContexts.member.subContexts.memberLog.app
 
 import com.back.boundedContexts.member.subContexts.memberLog.domain.MemberLog
 import com.back.boundedContexts.member.subContexts.memberLog.out.MemberLogRepository
-import com.back.sharedContexts.member.domain.Member
+import com.back.boundedContexts.sharedContexts.member.domain.Member
 import com.back.boundedContexts.post.domain.Post
 import com.back.boundedContexts.post.domain.PostComment
-import com.back.sharedContexts.post.event.PostCommentWrittenEvent
+import com.back.boundedContexts.post.event.PostCommentWrittenEvent
 import com.back.standard.util.Ut
 import org.springframework.stereotype.Service
 
@@ -23,7 +23,7 @@ class MemberLogFacade(
             event.postDto.id,
             Member(event.postDto.authorId),
             Member(event.actorDto.id),
-            Ut.json.toString(event, "")
+            Ut.JSON.toString(event, "")
         )
 
         memberLogRepository.save(log)

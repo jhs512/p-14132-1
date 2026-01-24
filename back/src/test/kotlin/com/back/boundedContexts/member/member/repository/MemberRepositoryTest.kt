@@ -1,7 +1,7 @@
 package com.back.boundedContexts.member.member.repository
 
-import com.back.sharedContexts.member.domain.MemberProxy
-import com.back.sharedContexts.member.out.MemberRepository
+import com.back.boundedContexts.sharedContexts.member.domain.MemberProxy
+import com.back.boundedContexts.sharedContexts.member.out.MemberRepository
 import com.back.standard.extensions.getOrThrow
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName

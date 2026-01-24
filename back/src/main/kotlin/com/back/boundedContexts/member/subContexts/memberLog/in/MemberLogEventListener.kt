@@ -1,7 +1,7 @@
 package com.back.boundedContexts.member.subContexts.memberLog.`in`
 
 import com.back.boundedContexts.member.subContexts.memberLog.app.MemberLogFacade
-import com.back.sharedContexts.post.event.PostCommentWrittenEvent
+import com.back.boundedContexts.post.event.PostCommentWrittenEvent
 import org.springframework.stereotype.Component
 import org.springframework.transaction.event.TransactionalEventListener
 

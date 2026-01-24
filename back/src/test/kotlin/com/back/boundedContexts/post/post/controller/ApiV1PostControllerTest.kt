@@ -1,7 +1,7 @@
 package com.back.boundedContexts.post.post.controller
 
 
-import com.back.sharedContexts.member.app.ActorFacade
+import com.back.boundedContexts.sharedContexts.member.app.ActorFacade
 import com.back.boundedContexts.post.`in`.ApiV1PostController
 import com.back.boundedContexts.post.app.PostFacade
 import com.back.standard.dto.PostSearchKeywordType1

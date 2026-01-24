@@ -1,6 +1,6 @@
 package com.back.global.security
 
-import com.back.sharedContexts.member.app.ActorFacade
+import com.back.boundedContexts.sharedContexts.member.app.ActorFacade
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException

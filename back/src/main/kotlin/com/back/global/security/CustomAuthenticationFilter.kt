@@ -3,8 +3,8 @@ package com.back.global.security
 import com.back.global.exceptions.BusinessException
 import com.back.global.rq.Rq
 import com.back.global.rsData.RsData
-import com.back.sharedContexts.member.app.ActorFacade
-import com.back.sharedContexts.member.domain.Member
+import com.back.boundedContexts.sharedContexts.member.app.ActorFacade
+import com.back.boundedContexts.sharedContexts.member.domain.Member
 import com.back.standard.util.Ut
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
@@ -45,7 +45,7 @@ class CustomAuthenticationFilter(
             val rsData: RsData<Void> = e.rsData
             response.contentType = "$APPLICATION_JSON_VALUE; charset=UTF-8"
             response.status = rsData.statusCode
-            response.writer.write(Ut.json.toString(rsData))
+            response.writer.write(Ut.JSON.toString(rsData))
         }
     }
 
@@ -107,11 +107,7 @@ class CustomAuthenticationFilter(
 
         val payload = actorFacade.payload(token) ?: return null
 
-        val id = payload["id"] as Int
-        val username = payload["username"] as String
-        val name = payload["name"] as String
-
-        return Member(id, username, name)
+        return Member(payload.id, payload.username, payload.name)
     }
 
     private fun refreshAccessToken(member: Member) {

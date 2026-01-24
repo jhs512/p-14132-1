@@ -1,7 +1,7 @@
 package com.back.boundedContexts.member.member.controller
 
 import com.back.boundedContexts.member.`in`.ApiV1AdmMemberController
-import com.back.sharedContexts.member.app.ActorFacade
+import com.back.boundedContexts.member.app.MemberFacade
 import com.back.standard.extensions.getOrThrow
 import org.hamcrest.Matchers
 import org.junit.jupiter.api.DisplayName
@@ -23,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional
 class ApiV1AdmMemberControllerTest {
     @Autowired
-    private lateinit var actorFacade: ActorFacade
+    private lateinit var memberFacade: MemberFacade
 
     @Autowired
     private lateinit var mvc: MockMvc
@@ -38,7 +38,7 @@ class ApiV1AdmMemberControllerTest {
             )
             .andDo(print())
 
-        val members = actorFacade.findPaged(1, 5).content
+        val members = memberFacade.findPaged(1, 5).content
 
         resultActions
             .andExpect(handler().handlerType(ApiV1AdmMemberController::class.java))
@@ -92,7 +92,7 @@ class ApiV1AdmMemberControllerTest {
             )
             .andDo(print())
 
-        val member = actorFacade.findById(id).getOrThrow()
+        val member = memberFacade.findById(id).getOrThrow()
 
         resultActions
             .andExpect(handler().handlerType(ApiV1AdmMemberController::class.java))

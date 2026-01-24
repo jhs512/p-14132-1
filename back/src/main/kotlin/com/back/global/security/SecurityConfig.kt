@@ -1,7 +1,7 @@
 package com.back.global.security
 
-import com.back.boundedContexts.member.app.MemberSecurityConfig
-import com.back.boundedContexts.post.app.PostSecurityConfig
+import com.back.boundedContexts.member.config.MemberSecurityConfig
+import com.back.boundedContexts.post.config.PostSecurityConfig
 import com.back.global.rsData.RsData
 import com.back.standard.util.Ut
 import org.springframework.context.annotation.Bean
@@ -80,7 +80,7 @@ class SecurityConfig(
                     response.contentType = "application/json;charset=UTF-8"
                     response.status = 401
                     response.writer.write(
-                        Ut.json.toString(
+                        Ut.JSON.toString(
                             RsData<Void>("401-1", "로그인 후 이용해주세요.")
                         )
                     )
@@ -90,7 +90,7 @@ class SecurityConfig(
                     response.contentType = "application/json;charset=UTF-8"
                     response.status = 403
                     response.writer.write(
-                        Ut.json.toString(
+                        Ut.JSON.toString(
                             RsData<Void>("403-1", "권한이 없습니다.")
                         )
                     )

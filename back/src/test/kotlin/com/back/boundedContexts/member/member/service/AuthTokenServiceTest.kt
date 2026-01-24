@@ -1,7 +1,8 @@
 package com.back.boundedContexts.member.member.service
 
-import com.back.sharedContexts.member.app.AuthTokenService
-import com.back.sharedContexts.member.app.ActorFacade
+import com.back.boundedContexts.sharedContexts.member.app.ActorFacade
+import com.back.boundedContexts.sharedContexts.member.app.AuthTokenService
+import com.back.boundedContexts.sharedContexts.member.dto.AccessTokenPayload
 import com.back.standard.extensions.getOrThrow
 import com.back.standard.util.Ut
 import io.jsonwebtoken.Jwts
@@ -84,7 +85,7 @@ class AuthTokenServiceTest {
     fun t3() {
         val payload = mapOf("name" to "Paul", "age" to 23)
 
-        val jwt = Ut.jwt.toString(
+        val jwt = Ut.JWT.toString(
             jwtSecretKey,
             accessTokenExpirationSeconds,
             payload
@@ -92,9 +93,9 @@ class AuthTokenServiceTest {
 
         assertThat(jwt).isNotBlank
 
-        assertThat(Ut.jwt.isValid(jwtSecretKey, jwt)).isTrue
+        assertThat(Ut.JWT.isValid(jwtSecretKey, jwt)).isTrue
 
-        val parsedPayload = Ut.jwt.payload(jwtSecretKey, jwt).getOrThrow()
+        val parsedPayload = Ut.JWT.payload(jwtSecretKey, jwt).getOrThrow()
 
         assertThat(payload.all { (key, value) ->
             parsedPayload[key] == value
@@ -112,10 +113,10 @@ class AuthTokenServiceTest {
 
         val parsedPayload = authTokenService.payload(accessToken)
 
-        val expectedPayload = mapOf(
-            "id" to memberUser1.id,
-            "username" to memberUser1.username,
-            "name" to memberUser1.name
+        val expectedPayload = AccessTokenPayload(
+            id = memberUser1.id,
+            username = memberUser1.username,
+            name = memberUser1.name
         )
 
         assertThat(parsedPayload)

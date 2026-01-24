@@ -1,6 +1,5 @@
 package com.back.global.security
 
-import com.back.standard.extensions.base64Encode
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository
 import org.springframework.security.oauth2.client.web.DefaultOAuth2AuthorizationRequestResolver
@@ -8,7 +7,6 @@ import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequest
 import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestResolver
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest
 import org.springframework.stereotype.Component
-import java.util.*
 
 @Component
 class CustomOAuth2AuthorizationRequestResolver(
@@ -30,13 +28,10 @@ class CustomOAuth2AuthorizationRequestResolver(
         req: OAuth2AuthorizationRequest,
         request: HttpServletRequest,
     ): OAuth2AuthorizationRequest {
-        val redirectUrl = request.getParameter("redirectUrl").orEmpty().ifBlank { "/" }
-        val originState = UUID.randomUUID().toString()
-        val rawState = "$redirectUrl#$originState"
-        val encodedState = rawState.base64Encode()
+        val state = OAuth2State.of(request.getParameter("redirectUrl"))
 
         return OAuth2AuthorizationRequest.from(req)
-            .state(encodedState)
+            .state(state.encode())
             .build()
     }
 }

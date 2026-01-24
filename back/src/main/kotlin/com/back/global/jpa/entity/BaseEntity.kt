@@ -1,10 +1,7 @@
 package com.back.global.jpa.entity
 
-import com.back.sharedContexts.member.domain.Member
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
-import jakarta.persistence.MappedSuperclass
+import com.back.boundedContexts.sharedContexts.member.domain.Member
+import jakarta.persistence.*
 
 @MappedSuperclass
 abstract class BaseEntity(
@@ -12,6 +9,13 @@ abstract class BaseEntity(
     @field:GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Int = 0
 ) {
+    @Transient
+    private val attrCache: MutableMap<String, Any> = mutableMapOf()
+
+    @Suppress("UNCHECKED_CAST")
+    fun <T : Any> getOrPutAttr(key: String, defaultValue: () -> T): T =
+        attrCache.getOrPut(key, defaultValue) as T
+
     override fun equals(other: Any?): Boolean {
         if (other === this) return true
         if (other !is Member) return false

@@ -7,7 +7,7 @@ import tools.jackson.databind.ObjectMapper
 import java.util.*
 
 object Ut {
-    object jwt {
+    object JWT {
         fun toString(secret: String, expireSeconds: Int, body: Map<String, Any>): String {
             val issuedAt = Date()
             val expiration = Date(issuedAt.time + 1000L * expireSeconds)
@@ -55,7 +55,7 @@ object Ut {
         }
     }
 
-    object json {
+    object JSON {
         lateinit var objectMapper: ObjectMapper
 
         fun toString(obj: Any, defaultValue: String = ""): String {
@@ -67,7 +67,7 @@ object Ut {
         }
     }
 
-    object cmd {
+    object CMD {
         fun run(vararg args: String) {
             val isWindows = System
                 .getProperty("os.name")
@@ -92,7 +92,7 @@ object Ut {
 
             val exitCode = process.waitFor()
 
-            println("종료 코드: $exitCode")
+            println("run exit code: $exitCode")
         }
 
         fun runAsync(vararg args: String) {

@@ -1,7 +1,7 @@
 package com.back.boundedContexts.post.`in`
 
 import com.back.boundedContexts.post.app.PostFacade
-import com.back.sharedContexts.post.dto.PostCommentDto
+import com.back.boundedContexts.post.dto.PostCommentDto
 import com.back.global.rq.Rq
 import com.back.global.rsData.RsData
 import com.back.standard.extensions.getOrThrow

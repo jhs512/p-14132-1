@@ -1,8 +1,7 @@
 package com.back.global.security
 
 import com.back.global.rq.Rq
-import com.back.sharedContexts.member.app.ActorFacade
-import com.back.standard.extensions.base64Decode
+import com.back.boundedContexts.sharedContexts.member.app.ActorFacade
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.security.core.Authentication
@@ -29,16 +28,7 @@ class CustomOAuth2LoginSuccessHandler(
         rq.setCookie("apiKey", actor.apiKey)
         rq.setCookie("accessToken", accessToken)
 
-        val redirectUrl = request.getParameter("state")
-            ?.let { encoded ->
-                runCatching {
-                    encoded.base64Decode()
-                }.getOrNull()
-            }
-            ?.substringBefore('#')
-            ?.takeIf { it.isNotBlank() }
-            ?: "/"
-
-        rq.sendRedirect(redirectUrl)
+        val state = OAuth2State.decode(request.getParameter("state"))
+        rq.sendRedirect(state.redirectUrl)
     }
 }

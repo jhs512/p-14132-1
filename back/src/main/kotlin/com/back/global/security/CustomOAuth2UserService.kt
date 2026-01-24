@@ -1,6 +1,6 @@
 package com.back.global.security
 
-import com.back.sharedContexts.member.app.ActorFacade
+import com.back.boundedContexts.member.app.MemberFacade
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest
 import org.springframework.security.oauth2.core.user.OAuth2User
@@ -19,7 +19,7 @@ private enum class OAuth2Provider {
 
 @Service
 class CustomOAuth2UserService(
-    private val actorFacade: ActorFacade
+    private val memberFacade: MemberFacade
 ) : DefaultOAuth2UserService() {
 
     @Transactional
@@ -29,7 +29,9 @@ class CustomOAuth2UserService(
 
         val (oauthUserId, nickname, profileImgUrl) = when (provider) {
             OAuth2Provider.KAKAO -> {
+                @Suppress("UNCHECKED_CAST")
                 val props = (oAuth2User.attributes.getValue("properties") as Map<String, Any>)
+
                 Triple(
                     oAuth2User.name,
                     props.getValue("nickname") as String,
@@ -39,6 +41,7 @@ class CustomOAuth2UserService(
 
             OAuth2Provider.GOOGLE -> {
                 val attrs = oAuth2User.attributes
+
                 Triple(
                     oAuth2User.name,
                     attrs.getValue("name") as String,
@@ -47,7 +50,9 @@ class CustomOAuth2UserService(
             }
 
             OAuth2Provider.NAVER -> {
+                @Suppress("UNCHECKED_CAST")
                 val resp = (oAuth2User.attributes.getValue("response") as Map<String, Any>)
+
                 Triple(
                     resp.getValue("id") as String,
                     resp.getValue("nickname") as String,
@@ -59,7 +64,7 @@ class CustomOAuth2UserService(
         val username = "${provider.name}__$oauthUserId"
         val password = ""
 
-        val member = actorFacade.modifyOrJoin(username, password, nickname, profileImgUrl).data
+        val member = memberFacade.modifyOrJoin(username, password, nickname, profileImgUrl).data
 
         return SecurityUser(
             member.id,

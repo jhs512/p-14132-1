@@ -1,6 +1,6 @@
 package com.back.global.initData
 
-import com.back.standard.util.Ut.cmd.runAsync
+import com.back.standard.util.Ut.CMD.runAsync
 import org.springframework.boot.ApplicationArguments
 import org.springframework.boot.ApplicationRunner
 import org.springframework.context.annotation.Bean
