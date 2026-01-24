@@ -2,9 +2,9 @@ package com.back.boundedContexts.member.app
 
 import com.back.global.exceptions.BusinessException
 import com.back.global.rsData.RsData
-import com.back.shared.member.app.AuthTokenService
-import com.back.shared.member.domain.Member
-import com.back.shared.member.out.MemberRepository
+import com.back.sharedContexts.member.app.AuthTokenService
+import com.back.sharedContexts.member.domain.Member
+import com.back.sharedContexts.member.out.MemberRepository
 import com.back.standard.dto.MemberSearchKeywordType1
 import com.back.standard.dto.MemberSearchSortType1
 import org.springframework.data.domain.PageRequest

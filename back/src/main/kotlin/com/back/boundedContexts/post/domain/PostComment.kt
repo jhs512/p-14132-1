@@ -2,7 +2,7 @@ package com.back.boundedContexts.post.domain
 
 import com.back.global.exceptions.BusinessException
 import com.back.global.jpa.entity.BaseTime
-import com.back.shared.member.domain.Member
+import com.back.sharedContexts.member.domain.Member
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
 import jakarta.persistence.ManyToOne

@@ -1,7 +1,8 @@
-package com.back.shared.member.domain
+package com.back.sharedContexts.member.domain
 
 import com.back.global.jpa.entity.BaseTime
-import com.back.shared.member.out.MemberAttrRepository
+import com.back.sharedContexts.member.out.MemberAttrRepository
+import com.back.sharedContexts.member.subContexts.post.domain.PostMember
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import org.hibernate.annotations.NaturalId
@@ -18,7 +19,7 @@ class Member(
     var password: String? = null,
     var nickname: String,
     @field:Column(unique = true) var apiKey: String,
-) : BaseTime(id) {
+) : BaseTime(id), PostMember {
 
     // ================================
     // Companion Object
@@ -59,7 +60,7 @@ class Member(
     // 공통 속성 (Profile)
     // ================================
 
-    val name: String
+    override val name: String
         get() = nickname
 
     @delegate:Transient
@@ -120,35 +121,19 @@ class Member(
             ?: MemberAttr(this, "postCommentsCount", "0")
     }
 
-    var postsCount
+    override var postsCount
         get() = postsCountAttr.value.toInt()
         set(value) {
             postsCountAttr.value = value.toString()
             attrRepository.save(postsCountAttr)
         }
 
-    var postCommentsCount
+    override var postCommentsCount
         get() = postCommentsCountAttr.value.toInt()
         set(value) {
             postCommentsCountAttr.value = value.toString()
             attrRepository.save(postCommentsCountAttr)
         }
-
-    fun incrementPostsCount() {
-        postsCount++
-    }
-
-    fun decrementPostsCount() {
-        postsCount--
-    }
-
-    fun incrementPostCommentsCount() {
-        postCommentsCount++
-    }
-
-    fun decrementPostCommentsCount() {
-        postCommentsCount--
-    }
 
     // ================================
     // Member 전용 메서드

@@ -1,6 +1,6 @@
-package com.back.shared.member.out
+package com.back.sharedContexts.member.out
 
-import com.back.shared.member.domain.Member
+import com.back.sharedContexts.member.domain.Member
 import com.back.standard.dto.MemberSearchKeywordType1
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable

@@ -1,7 +1,7 @@
 package com.back.boundedContexts.member.member.controller
 
 import com.back.boundedContexts.member.`in`.ApiV1MemberController
-import com.back.shared.member.app.ActorFacade
+import com.back.sharedContexts.member.app.ActorFacade
 import com.back.standard.extensions.getOrThrow
 import jakarta.servlet.http.Cookie
 import org.assertj.core.api.Assertions.assertThat

@@ -2,7 +2,7 @@ package com.back.boundedContexts.member.`in`
 
 import PageDto
 import com.back.boundedContexts.member.app.MemberFacade
-import com.back.shared.member.dto.MemberWithUsernameDto
+import com.back.sharedContexts.member.dto.MemberWithUsernameDto
 import com.back.standard.dto.MemberSearchKeywordType1
 import com.back.standard.dto.MemberSearchSortType1
 import com.back.standard.extensions.getOrThrow

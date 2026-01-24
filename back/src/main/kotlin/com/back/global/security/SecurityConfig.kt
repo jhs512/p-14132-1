@@ -1,10 +1,11 @@
 package com.back.global.security
 
+import com.back.boundedContexts.member.app.MemberSecurityConfig
+import com.back.boundedContexts.post.app.PostSecurityConfig
 import com.back.global.rsData.RsData
 import com.back.standard.util.Ut
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.http.HttpMethod
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.invoke
 import org.springframework.security.config.http.SessionCreationPolicy
@@ -19,7 +20,9 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 class SecurityConfig(
     private val customAuthenticationFilter: CustomAuthenticationFilter,
     private val customOAuth2LoginSuccessHandler: CustomOAuth2LoginSuccessHandler,
-    private val customOAuth2AuthorizationRequestResolver: CustomOAuth2AuthorizationRequestResolver
+    private val customOAuth2AuthorizationRequestResolver: CustomOAuth2AuthorizationRequestResolver,
+    private val postSecurityConfig: PostSecurityConfig,
+    private val memberSecurityConfig: MemberSecurityConfig,
 ) {
     @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
@@ -32,24 +35,10 @@ class SecurityConfig(
                 authorize("/h2-console/**", permitAll)
 
                 // ================================
-                // Post 모듈
+                // 모듈별 설정
                 // ================================
-                authorize(HttpMethod.GET, "/api/*/posts/{id:\\d+}", permitAll)
-                authorize(HttpMethod.GET, "/api/*/posts", permitAll)
-                authorize(HttpMethod.GET, "/api/*/posts/{postId:\\d+}/comments", permitAll)
-                authorize(HttpMethod.GET, "/api/*/posts/{postId:\\d+}/comments/{id:\\d+}", permitAll)
-
-                // ================================
-                // Member 모듈
-                // ================================
-                authorize("/api/*/actors/login", permitAll)
-                authorize("/api/*/actors/logout", permitAll)
-                authorize(HttpMethod.POST, "/api/*/actors", permitAll)
-                authorize(HttpMethod.GET, "/api/*/actors/{id:\\d+}/redirectToProfileImg", permitAll)
-                authorize("/api/*/members/login", permitAll)
-                authorize("/api/*/members/logout", permitAll)
-                authorize(HttpMethod.POST, "/api/*/members", permitAll)
-                authorize(HttpMethod.GET, "/api/*/members/{id:\\d+}/redirectToProfileImg", permitAll)
+                postSecurityConfig.configure(this)
+                memberSecurityConfig.configure(this)
 
                 // ================================
                 // Admin

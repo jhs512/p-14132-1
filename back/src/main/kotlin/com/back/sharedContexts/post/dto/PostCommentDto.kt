@@ -1,4 +1,4 @@
-package com.back.shared.post.dto
+package com.back.sharedContexts.post.dto
 
 import com.back.boundedContexts.post.domain.PostComment
 import java.time.LocalDateTime

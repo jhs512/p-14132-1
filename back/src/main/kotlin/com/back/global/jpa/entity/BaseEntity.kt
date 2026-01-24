@@ -1,6 +1,6 @@
 package com.back.global.jpa.entity
 
-import com.back.shared.member.domain.Member
+import com.back.sharedContexts.member.domain.Member
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id

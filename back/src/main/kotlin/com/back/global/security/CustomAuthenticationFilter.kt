@@ -3,8 +3,8 @@ package com.back.global.security
 import com.back.global.exceptions.BusinessException
 import com.back.global.rq.Rq
 import com.back.global.rsData.RsData
-import com.back.shared.member.app.ActorFacade
-import com.back.shared.member.domain.Member
+import com.back.sharedContexts.member.app.ActorFacade
+import com.back.sharedContexts.member.domain.Member
 import com.back.standard.util.Ut
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest

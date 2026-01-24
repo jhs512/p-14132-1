@@ -1,6 +1,6 @@
-package com.back.shared.member.app
+package com.back.sharedContexts.member.app
 
-import com.back.shared.member.domain.Member
+import com.back.sharedContexts.member.domain.Member
 import com.back.standard.util.Ut
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service

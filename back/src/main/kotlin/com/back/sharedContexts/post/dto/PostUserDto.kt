@@ -1,6 +1,6 @@
-package com.back.shared.post.dto
+package com.back.sharedContexts.post.dto
 
-import com.back.shared.member.domain.Member
+import com.back.sharedContexts.member.domain.Member
 import java.time.LocalDateTime
 
 data class PostUserDto(

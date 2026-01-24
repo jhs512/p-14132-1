@@ -3,7 +3,7 @@ package com.back.global.initData
 import com.back.boundedContexts.member.app.MemberFacade
 import com.back.boundedContexts.post.app.PostFacade
 import com.back.global.app.CustomConfigProperties
-import com.back.shared.member.app.ActorFacade
+import com.back.sharedContexts.member.app.ActorFacade
 import com.back.standard.extensions.getOrThrow
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.ApplicationRunner

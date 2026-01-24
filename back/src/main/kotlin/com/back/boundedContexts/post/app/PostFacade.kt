@@ -4,11 +4,11 @@ import com.back.boundedContexts.post.domain.Post
 import com.back.boundedContexts.post.domain.PostComment
 import kotlin.jvm.optionals.getOrNull
 import com.back.boundedContexts.post.out.PostRepository
-import com.back.shared.member.domain.Member
-import com.back.shared.post.dto.PostCommentDto
-import com.back.shared.post.dto.PostDto
-import com.back.shared.post.dto.PostUserDto
-import com.back.shared.post.event.PostCommentWrittenEvent
+import com.back.sharedContexts.member.domain.Member
+import com.back.sharedContexts.post.dto.PostCommentDto
+import com.back.sharedContexts.post.dto.PostDto
+import com.back.sharedContexts.post.dto.PostUserDto
+import com.back.sharedContexts.post.event.PostCommentWrittenEvent
 import com.back.standard.dto.PostSearchKeywordType1
 import com.back.standard.dto.PostSearchSortType1
 import org.springframework.context.ApplicationEventPublisher

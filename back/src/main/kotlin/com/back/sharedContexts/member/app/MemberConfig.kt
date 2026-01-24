@@ -1,7 +1,7 @@
-package com.back.shared.member.app
+package com.back.sharedContexts.member.app
 
-import com.back.shared.member.domain.Member
-import com.back.shared.member.out.MemberAttrRepository
+import com.back.sharedContexts.member.domain.Member
+import com.back.sharedContexts.member.out.MemberAttrRepository
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder

@@ -1,6 +1,6 @@
 package com.back.boundedContexts.member.subContexts.memberLog.domain
 
-import com.back.shared.member.domain.Member
+import com.back.sharedContexts.member.domain.Member
 import com.back.global.jpa.entity.BaseEntity
 import jakarta.persistence.Column
 import jakarta.persistence.Entity

@@ -1,9 +1,9 @@
 package com.back.global.rq
 
 import com.back.global.security.SecurityUser
-import com.back.shared.member.app.ActorFacade
-import com.back.shared.member.domain.Member
-import com.back.shared.member.domain.MemberProxy
+import com.back.sharedContexts.member.app.ActorFacade
+import com.back.sharedContexts.member.domain.Member
+import com.back.sharedContexts.member.domain.MemberProxy
 import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse

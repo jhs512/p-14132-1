@@ -1,8 +1,8 @@
-package com.back.shared.post.event
+package com.back.sharedContexts.post.event
 
-import com.back.shared.post.dto.PostCommentDto
-import com.back.shared.post.dto.PostDto
-import com.back.shared.post.dto.PostUserDto
+import com.back.sharedContexts.post.dto.PostCommentDto
+import com.back.sharedContexts.post.dto.PostDto
+import com.back.sharedContexts.post.dto.PostUserDto
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 

@@ -4,8 +4,8 @@ import PageDto
 import com.back.boundedContexts.post.app.PostFacade
 import com.back.global.rq.Rq
 import com.back.global.rsData.RsData
-import com.back.shared.post.dto.PostDto
-import com.back.shared.post.dto.PostWithContentDto
+import com.back.sharedContexts.post.dto.PostDto
+import com.back.sharedContexts.post.dto.PostWithContentDto
 import com.back.standard.dto.PostSearchKeywordType1
 import com.back.standard.dto.PostSearchSortType1
 import com.back.standard.extensions.getOrThrow
