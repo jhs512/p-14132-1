@@ -1,4 +1,4 @@
-package com.back.global.jpa.entity
+package com.back.boundedContexts.shared.core
 
 import jakarta.persistence.EntityListeners
 import jakarta.persistence.MappedSuperclass

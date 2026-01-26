@@ -1,4 +1,4 @@
-package com.back.global.rq
+package com.back.boundedContexts.shared.rq
 
 import com.back.global.security.SecurityUser
 import com.back.boundedContexts.sharedContexts.member.app.ActorFacade

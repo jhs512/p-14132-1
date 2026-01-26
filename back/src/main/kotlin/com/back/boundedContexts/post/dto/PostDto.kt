@@ -1,9 +1,10 @@
 package com.back.boundedContexts.post.dto
 
 import com.back.boundedContexts.post.domain.Post
+import com.fasterxml.jackson.annotation.JsonCreator
 import java.time.LocalDateTime
 
-data class PostDto(
+data class PostDto @JsonCreator constructor(
     val id: Int,
     val createDate: LocalDateTime,
     val modifyDate: LocalDateTime,

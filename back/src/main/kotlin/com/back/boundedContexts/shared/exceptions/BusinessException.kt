@@ -1,6 +1,6 @@
-package com.back.global.exceptions
+package com.back.boundedContexts.shared.exceptions
 
-import com.back.global.rsData.RsData
+import com.back.boundedContexts.shared.rsData.RsData
 
 class BusinessException(private val resultCode: String, private val msg: String) : RuntimeException(
     "$resultCode : $msg"

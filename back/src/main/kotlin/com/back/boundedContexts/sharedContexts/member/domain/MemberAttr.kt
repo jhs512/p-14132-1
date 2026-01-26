@@ -1,6 +1,6 @@
 package com.back.boundedContexts.sharedContexts.member.domain
 
-import com.back.global.jpa.entity.BaseTime
+import com.back.boundedContexts.shared.core.BaseTime
 import jakarta.persistence.*
 import jakarta.persistence.FetchType.LAZY
 import org.hibernate.annotations.NaturalId

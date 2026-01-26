@@ -1,6 +1,6 @@
 package com.back.global.aspects
 
-import com.back.global.rsData.RsData
+import com.back.boundedContexts.shared.rsData.RsData
 import jakarta.servlet.http.HttpServletResponse
 import org.aspectj.lang.ProceedingJoinPoint
 import org.aspectj.lang.annotation.Around
@@ -14,7 +14,7 @@ class ResponseAspect(
 ) {
     @Around(
         """
-            execution(public com.back.global.rsData.RsData *(..)) &&
+            execution(public com.back.boundedContexts.shared.rsData.RsData *(..)) &&
             (
                 within(@org.springframework.stereotype.Controller *) ||
                 within(@org.springframework.web.bind.annotation.RestController *)

@@ -1,7 +1,7 @@
 package com.back.boundedContexts.sharedContexts.member.domain
 
 import com.back.boundedContexts.post.domain.PostMember
-import com.back.global.jpa.entity.BaseTime
+import com.back.boundedContexts.shared.core.BaseTime
 import com.back.boundedContexts.sharedContexts.member.out.MemberAttrRepository
 import jakarta.persistence.Column
 import jakarta.persistence.Entity

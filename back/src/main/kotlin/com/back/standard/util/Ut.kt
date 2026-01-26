@@ -65,6 +65,18 @@ object Ut {
                 defaultValue
             }
         }
+
+        fun <T> fromString(json: String, clazz: Class<T>): T {
+            return objectMapper.readValue(json, clazz)
+        }
+
+        inline fun <reified T> fromMap(map: Any?): T {
+            return objectMapper.convertValue(map, T::class.java)
+        }
+
+        inline fun <reified T> fromString(json: String): T {
+            return objectMapper.readValue(json, T::class.java)
+        }
     }
 
     object CMD {

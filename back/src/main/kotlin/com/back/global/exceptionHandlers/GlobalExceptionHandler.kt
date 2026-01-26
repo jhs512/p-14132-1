@@ -1,7 +1,7 @@
 package com.back.global.exceptionHandlers
 
-import com.back.global.exceptions.BusinessException
-import com.back.global.rsData.RsData
+import com.back.boundedContexts.shared.exceptions.BusinessException
+import com.back.boundedContexts.shared.rsData.RsData
 import jakarta.validation.ConstraintViolationException
 import org.springframework.http.HttpStatus.BAD_REQUEST
 import org.springframework.http.HttpStatus.NOT_FOUND
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.ResponseStatus
 class GlobalExceptionHandler {
 
     @ExceptionHandler(NoSuchElementException::class)
-    fun handle(ex: NoSuchElementException): ResponseEntity<RsData<Void>> =
+    fun handle(e: NoSuchElementException): ResponseEntity<RsData<Void>> =
         ResponseEntity
             .status(NOT_FOUND)
             .body(

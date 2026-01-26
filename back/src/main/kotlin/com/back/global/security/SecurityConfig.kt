@@ -2,7 +2,7 @@ package com.back.global.security
 
 import com.back.boundedContexts.member.config.MemberSecurityConfig
 import com.back.boundedContexts.post.config.PostSecurityConfig
-import com.back.global.rsData.RsData
+import com.back.boundedContexts.shared.rsData.RsData
 import com.back.standard.util.Ut
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

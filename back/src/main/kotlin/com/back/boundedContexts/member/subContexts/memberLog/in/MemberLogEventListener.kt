@@ -1,16 +1,24 @@
 package com.back.boundedContexts.member.subContexts.memberLog.`in`
 
-import com.back.boundedContexts.member.subContexts.memberLog.app.MemberLogFacade
 import com.back.boundedContexts.post.event.PostCommentWrittenEvent
+import com.back.boundedContexts.shared.task.app.TaskService
+import com.back.boundedContexts.shared.task.domain.TaskHandler
+import com.back.boundedContexts.sharedContexts.member.domain.AddMemberLogPayload
 import org.springframework.stereotype.Component
+import org.springframework.transaction.event.TransactionPhase
 import org.springframework.transaction.event.TransactionalEventListener
 
 @Component
 class MemberLogEventListener(
-    private val memberLogFacade: MemberLogFacade,
+    private val taskService: TaskService
 ) {
-    @TransactionalEventListener
+    @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
     fun handle(event: PostCommentWrittenEvent) {
-        memberLogFacade.save(event)
+        taskService.add(AddMemberLogPayload(event))
+    }
+
+    @TaskHandler
+    fun handle(payload: AddMemberLogPayload) {
+        println("handle::AddMemberLogPayload")
     }
 }

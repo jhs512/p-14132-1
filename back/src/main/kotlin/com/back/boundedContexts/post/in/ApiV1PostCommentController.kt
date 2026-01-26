@@ -2,8 +2,8 @@ package com.back.boundedContexts.post.`in`
 
 import com.back.boundedContexts.post.app.PostFacade
 import com.back.boundedContexts.post.dto.PostCommentDto
-import com.back.global.rq.Rq
-import com.back.global.rsData.RsData
+import com.back.boundedContexts.shared.rq.Rq
+import com.back.boundedContexts.shared.rsData.RsData
 import com.back.standard.extensions.getOrThrow
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.security.SecurityRequirement

@@ -1,6 +1,5 @@
-package com.back.global.jpa.entity
+package com.back.boundedContexts.shared.core
 
-import com.back.boundedContexts.sharedContexts.member.domain.Member
 import jakarta.persistence.*
 
 @MappedSuperclass
@@ -18,7 +17,7 @@ abstract class BaseEntity(
 
     override fun equals(other: Any?): Boolean {
         if (other === this) return true
-        if (other !is Member) return false
+        if (other !is BaseEntity) return false
         return id == other.id
     }
 

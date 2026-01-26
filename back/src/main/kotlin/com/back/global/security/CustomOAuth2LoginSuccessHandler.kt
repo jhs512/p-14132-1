@@ -1,6 +1,6 @@
 package com.back.global.security
 
-import com.back.global.rq.Rq
+import com.back.boundedContexts.shared.rq.Rq
 import com.back.boundedContexts.sharedContexts.member.app.ActorFacade
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse

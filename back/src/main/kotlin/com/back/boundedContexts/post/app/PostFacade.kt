@@ -1,29 +1,26 @@
 package com.back.boundedContexts.post.app
 
+import com.back.boundedContexts.member.dto.MemberDto
 import com.back.boundedContexts.post.domain.Post
 import com.back.boundedContexts.post.domain.PostComment
-import kotlin.jvm.optionals.getOrNull
-import com.back.boundedContexts.post.out.PostRepository
-import com.back.boundedContexts.sharedContexts.member.domain.Member
 import com.back.boundedContexts.post.dto.PostCommentDto
 import com.back.boundedContexts.post.dto.PostDto
-import com.back.boundedContexts.post.dto.PostUserDto
 import com.back.boundedContexts.post.event.PostCommentWrittenEvent
-import com.back.boundedContexts.sharedContexts.outbox.domain.OutboxEvent
-import com.back.boundedContexts.sharedContexts.outbox.out.OutboxEventRepository
+import com.back.boundedContexts.post.out.PostRepository
+import com.back.boundedContexts.shared.event.app.EventPublisher
+import com.back.boundedContexts.sharedContexts.member.domain.Member
 import com.back.standard.dto.PostSearchKeywordType1
 import com.back.standard.dto.PostSearchSortType1
-import com.back.standard.util.Ut
-import org.springframework.context.ApplicationEventPublisher
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
+import java.util.*
+import kotlin.jvm.optionals.getOrNull
 
 @Service
 class PostFacade(
     private val postRepository: PostRepository,
-    private val outboxEventRepository: OutboxEventRepository,
-    private val publisher: ApplicationEventPublisher,
+    private val eventPublisher: EventPublisher,
 ) {
     fun count(): Long = postRepository.count()
 
@@ -37,8 +34,6 @@ class PostFacade(
 
     fun findById(id: Int): Post? = postRepository.findById(id).getOrNull()
 
-    fun findAll(): List<Post> = postRepository.findAll()
-
     fun modify(post: Post, title: String, content: String) {
         post.modify(title, content)
     }
@@ -48,22 +43,14 @@ class PostFacade(
 
         postRepository.flush()
 
-        val event = PostCommentWrittenEvent(
-            PostCommentDto(postComment),
-            PostDto(post),
-            PostUserDto(author)
-        )
-
-        outboxEventRepository.save(
-            OutboxEvent(
-                eventType = event::class.simpleName!!,
-                aggregateType = "PostComment",
-                aggregateId = postComment.id,
-                payload = Ut.JSON.toString(event)
+        eventPublisher.publish(
+            PostCommentWrittenEvent(
+                UUID.randomUUID(),
+                PostCommentDto(postComment),
+                PostDto(post),
+                MemberDto(author)
             )
         )
-
-        publisher.publishEvent(event)
 
         return postComment
     }
@@ -82,8 +69,6 @@ class PostFacade(
     }
 
     fun findLatest(): Post? = postRepository.findFirstByOrderByIdDesc()
-
-    fun flush() = postRepository.flush()
 
     fun findPagedByKw(
         kwType: PostSearchKeywordType1,

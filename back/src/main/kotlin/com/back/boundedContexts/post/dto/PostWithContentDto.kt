@@ -1,9 +1,12 @@
 package com.back.boundedContexts.post.dto
 
 import com.back.boundedContexts.post.domain.Post
+import com.fasterxml.jackson.annotation.JsonCreator
+import com.querydsl.core.types.Projections.constructor
+import org.springframework.data.jpa.domain.AbstractPersistable_.id
 import java.time.LocalDateTime
 
-data class PostWithContentDto(
+data class PostWithContentDto @JsonCreator constructor(
     val id: Int,
     val createDate: LocalDateTime,
     val modifyDate: LocalDateTime,

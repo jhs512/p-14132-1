@@ -1,7 +1,7 @@
 package com.back.boundedContexts.post.domain
 
-import com.back.global.exceptions.BusinessException
-import com.back.global.jpa.entity.BaseTime
+import com.back.boundedContexts.shared.exceptions.BusinessException
+import com.back.boundedContexts.shared.core.BaseTime
 import com.back.boundedContexts.sharedContexts.member.domain.Member
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType

@@ -1,4 +1,4 @@
-package com.back.global.rsData
+package com.back.boundedContexts.shared.rsData
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 
