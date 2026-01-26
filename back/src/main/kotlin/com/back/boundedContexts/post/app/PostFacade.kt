@@ -9,8 +9,11 @@ import com.back.boundedContexts.post.dto.PostCommentDto
 import com.back.boundedContexts.post.dto.PostDto
 import com.back.boundedContexts.post.dto.PostUserDto
 import com.back.boundedContexts.post.event.PostCommentWrittenEvent
+import com.back.boundedContexts.sharedContexts.outbox.domain.OutboxEvent
+import com.back.boundedContexts.sharedContexts.outbox.out.OutboxEventRepository
 import com.back.standard.dto.PostSearchKeywordType1
 import com.back.standard.dto.PostSearchSortType1
+import com.back.standard.util.Ut
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
@@ -19,6 +22,7 @@ import org.springframework.stereotype.Service
 @Service
 class PostFacade(
     private val postRepository: PostRepository,
+    private val outboxEventRepository: OutboxEventRepository,
     private val publisher: ApplicationEventPublisher,
 ) {
     fun count(): Long = postRepository.count()
@@ -44,13 +48,22 @@ class PostFacade(
 
         postRepository.flush()
 
-        publisher.publishEvent(
-            PostCommentWrittenEvent(
-                PostCommentDto(postComment),
-                PostDto(post),
-                PostUserDto(author)
+        val event = PostCommentWrittenEvent(
+            PostCommentDto(postComment),
+            PostDto(post),
+            PostUserDto(author)
+        )
+
+        outboxEventRepository.save(
+            OutboxEvent(
+                eventType = event::class.simpleName!!,
+                aggregateType = "PostComment",
+                aggregateId = postComment.id,
+                payload = Ut.JSON.toString(event)
             )
         )
+
+        publisher.publishEvent(event)
 
         return postComment
     }
