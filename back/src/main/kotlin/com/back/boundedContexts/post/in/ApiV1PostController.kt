@@ -2,12 +2,12 @@ package com.back.boundedContexts.post.`in`
 
 import PageDto
 import com.back.boundedContexts.post.app.PostFacade
-import com.back.boundedContexts.shared.rq.Rq
-import com.back.boundedContexts.shared.rsData.RsData
 import com.back.boundedContexts.post.dto.PostDto
 import com.back.boundedContexts.post.dto.PostWithContentDto
-import com.back.standard.dto.PostSearchKeywordType1
-import com.back.standard.dto.PostSearchSortType1
+import com.back.global.dto.RsData
+import com.back.global.web.Rq
+import com.back.standard.dto.post.type1.PostSearchKeywordType1
+import com.back.standard.dto.post.type1.PostSearchSortType1
 import com.back.standard.extensions.getOrThrow
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.security.SecurityRequirement

@@ -1,11 +1,11 @@
 package com.back.boundedContexts.member.`in`
 
 import com.back.boundedContexts.member.app.MemberFacade
-import com.back.boundedContexts.shared.exceptions.BusinessException
-import com.back.boundedContexts.shared.rq.Rq
-import com.back.boundedContexts.shared.rsData.RsData
 import com.back.boundedContexts.member.dto.MemberDto
 import com.back.boundedContexts.member.dto.MemberWithUsernameDto
+import com.back.global.exception.app.BusinessException
+import com.back.global.dto.RsData
+import com.back.global.web.Rq
 import com.back.standard.extensions.getOrThrow
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.security.SecurityRequirement

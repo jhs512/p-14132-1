@@ -1,12 +1,12 @@
 package com.back.boundedContexts.member.app
 
-import com.back.boundedContexts.shared.exceptions.BusinessException
-import com.back.boundedContexts.shared.rsData.RsData
-import com.back.boundedContexts.sharedContexts.member.app.AuthTokenService
-import com.back.boundedContexts.sharedContexts.member.domain.Member
-import com.back.boundedContexts.sharedContexts.member.out.MemberRepository
-import com.back.standard.dto.MemberSearchKeywordType1
-import com.back.standard.dto.MemberSearchSortType1
+import com.back.boundedContexts.member.app.shared.AuthTokenService
+import com.back.boundedContexts.member.domain.shared.Member
+import com.back.boundedContexts.member.out.shared.MemberRepository
+import com.back.global.exception.app.BusinessException
+import com.back.global.dto.RsData
+import com.back.standard.dto.member.type1.MemberSearchKeywordType1
+import com.back.standard.dto.member.type1.MemberSearchSortType1
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -16,24 +16,27 @@ import kotlin.jvm.optionals.getOrNull
 @Service
 class MemberFacade(
     private val memberRepository: MemberRepository,
+    private val passwordEncoder: PasswordEncoder,
     private val authTokenService: AuthTokenService,
-    private val passwordEncoder: PasswordEncoder
 ) {
-    fun count(): Long = memberRepository.count() // 단순 위임
+    fun count(): Long = memberRepository.count()
 
     fun join(username: String, password: String?, nickname: String): Member =
         join(username, password, nickname, null)
 
     fun join(username: String, password: String?, nickname: String, profileImgUrl: String?): Member {
-        // 아이디 중복 체크: 존재하면 409 에러
         memberRepository.findByUsername(username)?.let {
-            throw BusinessException("409-1", "이미 존재하는 아이디입니다.")
+            throw BusinessException("409-1", "이미 존재하는 회원 아이디입니다.")
         }
 
-        val encodedPassword = if (!password.isNullOrBlank()) passwordEncoder.encode(password) else null
+        val encodedPassword = if (!password.isNullOrBlank())
+            passwordEncoder.encode(password)
+        else
+            null
 
-        // 엔티티 생성 후 저장
         val member = memberRepository.save(Member(username, encodedPassword, nickname))
+
+        // 프로필 이미지 설정은 추가필드이기 때문에 회원 저장 후에 수행해야한다.
         profileImgUrl?.let { member.profileImgUrl = it }
 
         return member
@@ -41,18 +44,18 @@ class MemberFacade(
 
     fun findByUsername(username: String): Member? = memberRepository.findByUsername(username)
 
-    fun findByApiKey(apiKey: String): Member? = memberRepository.findByApiKey(apiKey)
-
     fun genAccessToken(member: Member): String = authTokenService.genAccessToken(member)
 
     fun payload(accessToken: String) = authTokenService.payload(accessToken)
 
     fun findById(id: Int): Member? = memberRepository.findById(id).getOrNull()
 
-    fun findAll(): List<Member> = memberRepository.findAll()
-
     fun findPaged(page: Int, pageSize: Int) = memberRepository.findAll(
-        PageRequest.of(page - 1, pageSize, Sort.by(Sort.Direction.DESC, "id"))
+        PageRequest.of(
+            page - 1,
+            pageSize,
+            Sort.by(Sort.Direction.DESC, "id"),
+        )
     )
 
     fun checkPassword(member: Member, rawPassword: String) {
@@ -66,22 +69,21 @@ class MemberFacade(
         findByUsername(username)
             ?.let {
                 modify(it, nickname, profileImgUrl)
+
                 RsData("200-1", "회원 정보가 수정되었습니다.", it)
             } ?: run {
-            val joined = join(username, password, nickname, profileImgUrl)
-            RsData("201-1", "회원가입이 완료되었습니다.", joined)
+            val joinedMember = join(username, password, nickname, profileImgUrl)
+
+            RsData("201-1", "회원가입이 완료되었습니다.", joinedMember)
         }
 
-    fun modify(member: Member, nickname: String, profileImgUrl: String?) {
+    fun modify(member: Member, nickname: String, profileImgUrl: String?) =
         member.modify(nickname, profileImgUrl)
-    }
 
     fun findPagedByKw(
         kwType: MemberSearchKeywordType1,
         kw: String,
-
         sort: MemberSearchSortType1,
-
         page: Int,
         pageSize: Int
     ) =
@@ -94,6 +96,4 @@ class MemberFacade(
                 sort.sortBy
             )
         )
-
-    fun getReferenceById(id: Int): Member = memberRepository.getReferenceById(id)
 }

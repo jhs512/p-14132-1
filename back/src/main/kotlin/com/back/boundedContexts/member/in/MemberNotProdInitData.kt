@@ -1,7 +1,7 @@
 package com.back.boundedContexts.member.`in`
 
 import com.back.boundedContexts.member.app.MemberFacade
-import com.back.global.app.CustomConfigProperties
+import com.back.global.app.app.CustomConfigProperties
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.ApplicationRunner
 import org.springframework.context.annotation.Bean
@@ -51,7 +51,6 @@ class MemberNotProdInitData(
         val memberUser3 = memberFacade.join("user3", "1234", "유저3")
         memberUser3.modifyApiKey(memberUser3.username)
 
-        // 코틀린 람다 스타일로 변경
         customConfigProperties.notProdMembers.forEach { notProdMember ->
             val socialMember = memberFacade.join(
                 notProdMember.username,

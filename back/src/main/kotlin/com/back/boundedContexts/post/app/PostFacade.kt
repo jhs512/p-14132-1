@@ -1,5 +1,6 @@
 package com.back.boundedContexts.post.app
 
+import com.back.boundedContexts.member.domain.shared.Member
 import com.back.boundedContexts.member.dto.MemberDto
 import com.back.boundedContexts.post.domain.Post
 import com.back.boundedContexts.post.domain.PostComment
@@ -7,10 +8,9 @@ import com.back.boundedContexts.post.dto.PostCommentDto
 import com.back.boundedContexts.post.dto.PostDto
 import com.back.boundedContexts.post.event.PostCommentWrittenEvent
 import com.back.boundedContexts.post.out.PostRepository
-import com.back.boundedContexts.shared.event.app.EventPublisher
-import com.back.boundedContexts.sharedContexts.member.domain.Member
-import com.back.standard.dto.PostSearchKeywordType1
-import com.back.standard.dto.PostSearchSortType1
+import com.back.global.event.app.EventPublisher
+import com.back.standard.dto.post.type1.PostSearchKeywordType1
+import com.back.standard.dto.post.type1.PostSearchSortType1
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
@@ -34,9 +34,8 @@ class PostFacade(
 
     fun findById(id: Int): Post? = postRepository.findById(id).getOrNull()
 
-    fun modify(post: Post, title: String, content: String) {
+    fun modify(post: Post, title: String, content: String) =
         post.modify(title, content)
-    }
 
     fun writeComment(author: Member, post: Post, content: String): PostComment {
         val postComment = post.addComment(author, content)

@@ -1,6 +1,6 @@
 package com.back.boundedContexts.post.postComment.controller
 
-import com.back.boundedContexts.sharedContexts.member.app.ActorFacade
+import com.back.boundedContexts.member.app.shared.ActorFacade
 import com.back.boundedContexts.post.app.PostFacade
 import com.back.boundedContexts.post.`in`.ApiV1PostCommentController
 import com.back.standard.extensions.getOrThrow

@@ -1,11 +1,11 @@
 package com.back.boundedContexts.post.post.controller
 
 
-import com.back.boundedContexts.sharedContexts.member.app.ActorFacade
+import com.back.boundedContexts.member.app.shared.ActorFacade
 import com.back.boundedContexts.post.`in`.ApiV1PostController
 import com.back.boundedContexts.post.app.PostFacade
-import com.back.standard.dto.PostSearchKeywordType1
-import com.back.standard.dto.PostSearchSortType1
+import com.back.standard.dto.post.type1.PostSearchKeywordType1
+import com.back.standard.dto.post.type1.PostSearchSortType1
 import com.back.standard.extensions.getOrThrow
 import jakarta.servlet.http.Cookie
 import org.hamcrest.Matchers

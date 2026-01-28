@@ -1,7 +1,7 @@
 package com.back.boundedContexts.member.subContexts.memberLog.domain
 
-import com.back.boundedContexts.sharedContexts.member.domain.Member
-import com.back.boundedContexts.shared.core.BaseEntity
+import com.back.boundedContexts.member.domain.shared.Member
+import com.back.global.jpa.domain.BaseEntity
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType

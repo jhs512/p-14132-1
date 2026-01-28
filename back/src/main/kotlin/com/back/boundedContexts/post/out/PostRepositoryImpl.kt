@@ -2,11 +2,8 @@ package com.back.boundedContexts.post.out
 
 import com.back.boundedContexts.post.domain.Post
 import com.back.boundedContexts.post.domain.QPost.post
-import com.back.standard.dto.PostSearchKeywordType1
+import com.back.standard.dto.post.type1.PostSearchKeywordType1
 import com.back.standard.util.QueryDslUtil
-import com.back.standard.util.and
-import com.back.standard.util.containsIgnoreCase
-import com.back.standard.util.or
 import com.querydsl.core.BooleanBuilder
 import com.querydsl.jpa.impl.JPAQueryFactory
 import org.springframework.data.domain.Page
@@ -21,14 +18,14 @@ class PostRepositoryImpl(
 
         if (kw.isNotBlank()) {
             when (kwType) {
-                PostSearchKeywordType1.TITLE -> builder.and(post.title containsIgnoreCase kw)
-                PostSearchKeywordType1.CONTENT -> builder.and(post.body.content containsIgnoreCase kw)
-                PostSearchKeywordType1.AUTHOR_NAME -> builder.and(post.author.nickname containsIgnoreCase kw)
+                PostSearchKeywordType1.TITLE -> builder.and(post.title.containsIgnoreCase(kw))
+                PostSearchKeywordType1.CONTENT -> builder.and(post.body.content.containsIgnoreCase(kw))
+                PostSearchKeywordType1.AUTHOR_NAME -> builder.and(post.author.nickname.containsIgnoreCase(kw))
                 PostSearchKeywordType1.ALL ->
                     builder.and(
-                        (post.title containsIgnoreCase kw) or
-                            (post.body.content containsIgnoreCase kw) or
-                            (post.author.nickname containsIgnoreCase kw)
+                        post.title.containsIgnoreCase(kw)
+                            .or(post.body.content.containsIgnoreCase(kw))
+                            .or(post.author.nickname.containsIgnoreCase(kw))
                     )
             }
         }

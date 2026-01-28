@@ -8,6 +8,7 @@ import com.querydsl.jpa.impl.JPAQuery
 import org.springframework.data.domain.Pageable
 
 object QueryDslUtil {
+    @Suppress("UNCHECKED_CAST")
     fun <T> applySorting(
         query: JPAQuery<T>,
         pageable: Pageable,

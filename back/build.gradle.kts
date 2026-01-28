@@ -53,6 +53,7 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")
 
     implementation("io.github.openfeign.querydsl:querydsl-jpa:7.1")
+    implementation("io.github.openfeign.querydsl:querydsl-kotlin:7.1")
     kapt("io.github.openfeign.querydsl:querydsl-apt:7.1:jpa")
 
     implementation("org.springframework.boot:spring-boot-starter-security")

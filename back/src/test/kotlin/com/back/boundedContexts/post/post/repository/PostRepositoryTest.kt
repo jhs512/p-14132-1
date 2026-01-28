@@ -2,8 +2,8 @@ package com.back.boundedContexts.post.post.repository
 
 
 import com.back.boundedContexts.post.out.PostRepository
-import com.back.standard.dto.PostSearchKeywordType1
-import com.back.standard.dto.PostSearchSortType1
+import com.back.standard.dto.post.type1.PostSearchKeywordType1
+import com.back.standard.dto.post.type1.PostSearchSortType1
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test

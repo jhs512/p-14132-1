@@ -1,16 +1,18 @@
 package com.back.boundedContexts.post.domain
 
-import com.back.boundedContexts.shared.exceptions.BusinessException
-import com.back.boundedContexts.shared.core.BaseTime
-import com.back.boundedContexts.sharedContexts.member.domain.Member
+import com.back.boundedContexts.member.domain.shared.Member
+import com.back.global.exception.app.BusinessException
+import com.back.global.jpa.domain.BaseTime
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
 import jakarta.persistence.ManyToOne
 
 @Entity
 class PostComment(
-    @field:ManyToOne(fetch = FetchType.LAZY) val author: Member,
-    @field:ManyToOne(fetch = FetchType.LAZY) val post: Post,
+    @field:ManyToOne(fetch = FetchType.LAZY)
+    val author: Member,
+    @field:ManyToOne(fetch = FetchType.LAZY)
+    val post: Post,
     var content: String,
 ) : BaseTime() {
     fun modify(content: String) {

@@ -1,32 +1,28 @@
 package com.back.boundedContexts.post.domain
 
-import com.back.boundedContexts.sharedContexts.member.domain.Member
-import com.back.boundedContexts.sharedContexts.member.domain.Member.Companion.attrRepository
-import com.back.boundedContexts.sharedContexts.member.domain.MemberAttr
+import com.back.boundedContexts.member.domain.shared.HasMember
+import com.back.boundedContexts.member.domain.shared.Member.Companion.attrRepository
+import com.back.boundedContexts.member.domain.shared.MemberAttr
 
 private const val POSTS_COUNT = "postsCount"
 private const val POST_COMMENTS_COUNT = "postCommentsCount"
 private const val DEFAULT_COUNT = "0"
 
-interface PostMember {
-    val id: Int
-    val name: String
-    val self: Member
-
+interface PostMember : HasMember {
     // ================================
     // Attr 프로퍼티 (캐싱 포함)
     // ================================
 
     val postsCountAttr: MemberAttr
-        get() = self.getOrPutAttr(POSTS_COUNT) {
-            attrRepository.findBySubjectAndName(self, POSTS_COUNT)
-                ?: MemberAttr(self, POSTS_COUNT, DEFAULT_COUNT)
+        get() = member.getOrPutAttr(POSTS_COUNT) {
+            attrRepository.findBySubjectAndName(member, POSTS_COUNT)
+                ?: MemberAttr(member, POSTS_COUNT, DEFAULT_COUNT)
         }
 
     val postCommentsCountAttr: MemberAttr
-        get() = self.getOrPutAttr(POST_COMMENTS_COUNT) {
-            attrRepository.findBySubjectAndName(self, POST_COMMENTS_COUNT)
-                ?: MemberAttr(self, POST_COMMENTS_COUNT, DEFAULT_COUNT)
+        get() = member.getOrPutAttr(POST_COMMENTS_COUNT) {
+            attrRepository.findBySubjectAndName(member, POST_COMMENTS_COUNT)
+                ?: MemberAttr(member, POST_COMMENTS_COUNT, DEFAULT_COUNT)
         }
 
     // ================================

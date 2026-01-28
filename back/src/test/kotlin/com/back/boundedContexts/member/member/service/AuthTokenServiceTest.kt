@@ -1,8 +1,8 @@
 package com.back.boundedContexts.member.member.service
 
-import com.back.boundedContexts.sharedContexts.member.app.ActorFacade
-import com.back.boundedContexts.sharedContexts.member.app.AuthTokenService
-import com.back.boundedContexts.sharedContexts.member.dto.AccessTokenPayload
+import com.back.boundedContexts.member.app.shared.ActorFacade
+import com.back.boundedContexts.member.app.shared.AuthTokenService
+import com.back.boundedContexts.member.dto.shared.AccessTokenPayload
 import com.back.standard.extensions.getOrThrow
 import com.back.standard.util.Ut
 import io.jsonwebtoken.Jwts
