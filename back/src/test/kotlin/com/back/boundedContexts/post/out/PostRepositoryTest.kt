@@ -1,4 +1,4 @@
-package com.back.boundedContexts.post.post.repository
+package com.back.boundedContexts.post.out
 
 
 import com.back.boundedContexts.post.out.PostRepository

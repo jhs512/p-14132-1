@@ -32,6 +32,8 @@ class Member(
         lateinit var attrRepository_: MemberAttrRepository
         val attrRepository by lazy { attrRepository_ }
 
+        val SYSTEM = Member(1, "system", "시스템")
+
         fun genApiKey() = UUID.randomUUID().toString()
     }
 
@@ -91,10 +93,8 @@ class Member(
             .takeIf { it.isNotBlank() }
             ?: "https://placehold.co/600x600?text=U_U"
 
-    @delegate:Transient
-    val redirectToProfileImgUrlOrDefault: String by lazy {
-        "http://localhost:8080/api/v1/members/${id}/redirectToProfileImg"
-    }
+    val redirectToProfileImgUrlOrDefault: String
+        get() = "http://localhost:8080/member/api/v1/members/${id}/redirectToProfileImg"
 
     // ================================
     // Member 전용 메서드

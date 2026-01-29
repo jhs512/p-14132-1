@@ -14,7 +14,7 @@ export default function usePostComments(postId: number) {
 
   useEffect(() => {
     client
-      .GET("/api/v1/posts/{postId}/comments", {
+      .GET("/post/api/v1/posts/{postId}/comments", {
         params: {
           path: {
             postId,
@@ -35,7 +35,7 @@ export default function usePostComments(postId: number) {
     onSuccess: (data: RsDataVoid) => void,
   ) => {
     client
-      .DELETE("/api/v1/posts/{postId}/comments/{id}", {
+      .DELETE("/post/api/v1/posts/{postId}/comments/{id}", {
         params: {
           path: {
             postId,
@@ -62,7 +62,7 @@ export default function usePostComments(postId: number) {
     onSuccess: (data: RsDataPostCommentDto) => void,
   ) => {
     client
-      .POST("/api/v1/posts/{postId}/comments", {
+      .POST("/post/api/v1/posts/{postId}/comments", {
         params: {
           path: {
             postId,
@@ -92,7 +92,7 @@ export default function usePostComments(postId: number) {
     onSuccess: (data: RsDataVoid) => void,
   ) => {
     client
-      .PUT("/api/v1/posts/{postId}/comments/{id}", {
+      .PUT("/post/api/v1/posts/{postId}/comments/{id}", {
         params: {
           path: {
             postId,

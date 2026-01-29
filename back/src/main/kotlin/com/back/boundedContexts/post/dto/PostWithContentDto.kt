@@ -4,12 +4,12 @@ import com.back.boundedContexts.post.domain.Post
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.querydsl.core.types.Projections.constructor
 import org.springframework.data.jpa.domain.AbstractPersistable_.id
-import java.time.LocalDateTime
+import java.time.Instant
 
 data class PostWithContentDto @JsonCreator constructor(
     val id: Int,
-    val createDate: LocalDateTime,
-    val modifyDate: LocalDateTime,
+    val createdAt: Instant,
+    val modifiedAt: Instant,
     val authorId: Int,
     val authorName: String,
     val authorProfileImgUrl: String,
@@ -18,8 +18,8 @@ data class PostWithContentDto @JsonCreator constructor(
 ) {
     constructor(post: Post) : this(
         id = post.id,
-        createDate = post.createDate,
-        modifyDate = post.modifyDate,
+        createdAt = post.createdAt,
+        modifiedAt = post.modifiedAt,
         authorId = post.author.id,
         authorName = post.author.name,
         authorProfileImgUrl = post.author.redirectToProfileImgUrlOrDefault,

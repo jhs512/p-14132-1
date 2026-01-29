@@ -2,8 +2,9 @@ package com.back.global.security.config
 
 import com.back.boundedContexts.member.app.shared.ActorFacade
 import com.back.boundedContexts.member.domain.shared.Member
-import com.back.global.exception.app.BusinessException
+import com.back.global.app.config.AppConfig
 import com.back.global.dto.RsData
+import com.back.global.exception.app.BusinessException
 import com.back.global.security.domain.SecurityUser
 import com.back.global.web.Rq
 import com.back.standard.util.Ut
@@ -26,14 +27,24 @@ class CustomAuthenticationFilter(
 ) : OncePerRequestFilter() {
 
     private val publicApiPaths = setOf(
-        "/api/v1/members/login",
-        "/api/v1/members/logout",
-        "/api/v1/members/join",
+        "/member/api/v1/members/login",
+        "/member/api/v1/members/logout",
+        "/member/api/v1/members/join",
     )
 
     private val publicApiPatterns = listOf(
-        Regex("/api/v1/members/\\d+/redirectToProfileImg")
+        Regex("/member/api/v1/members/\\d+/redirectToProfileImg")
     )
+
+    private val apiPrefixes = listOf("/member/api/", "/post/api/")
+
+    override fun shouldNotFilter(request: HttpServletRequest): Boolean {
+        val uri = request.requestURI
+        if (apiPrefixes.none { uri.startsWith(it) }) return true
+        if (uri in publicApiPaths) return true
+        if (publicApiPatterns.any { it.matches(uri) }) return true
+        return false
+    }
 
     override fun doFilterInternal(
         request: HttpServletRequest,
@@ -51,13 +62,14 @@ class CustomAuthenticationFilter(
     }
 
     private fun work(request: HttpServletRequest, response: HttpServletResponse, filterChain: FilterChain) {
-        if (!isApiRequest(request) || isPublicApi(request)) {
+        val (apiKey, accessToken) = extractTokens()
+        if (apiKey.isBlank() && accessToken.isBlank()) {
             filterChain.doFilter(request, response)
             return
         }
 
-        val (apiKey, accessToken) = extractTokens()
-        if (apiKey.isBlank() && accessToken.isBlank()) {
+        if (apiKey == AppConfig.systemMemberApiKey && accessToken.isEmpty()) {
+            authenticate(Member(1, "system", "시스템"))
             filterChain.doFilter(request, response)
             return
         }
@@ -71,14 +83,6 @@ class CustomAuthenticationFilter(
         authenticate(member)
 
         filterChain.doFilter(request, response)
-    }
-
-    private fun isApiRequest(request: HttpServletRequest): Boolean =
-        request.requestURI.startsWith("/api/")
-
-    private fun isPublicApi(request: HttpServletRequest): Boolean {
-        val uri = request.requestURI
-        return uri in publicApiPaths || publicApiPatterns.any { it.matches(uri) }
     }
 
     private fun extractTokens(): Pair<String, String> {

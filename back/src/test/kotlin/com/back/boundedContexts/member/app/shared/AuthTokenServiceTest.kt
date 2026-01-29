@@ -1,4 +1,4 @@
-package com.back.boundedContexts.member.member.service
+package com.back.boundedContexts.member.app.shared
 
 import com.back.boundedContexts.member.app.shared.ActorFacade
 import com.back.boundedContexts.member.app.shared.AuthTokenService

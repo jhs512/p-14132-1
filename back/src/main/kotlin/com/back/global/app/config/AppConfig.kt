@@ -28,5 +28,7 @@ class AppConfig(
         val isTest: Boolean by lazy { environment.matchesProfiles("test") }
         val isProd: Boolean by lazy { environment.matchesProfiles("prod") }
         val isNotProd: Boolean by lazy { !isProd }
+        val internalHost: String by lazy { environment.getProperty("custom.internalHost")!! }
+        val systemMemberApiKey: String by lazy { environment.getProperty("custom.systemMemberApiKey")!! }
     }
 }

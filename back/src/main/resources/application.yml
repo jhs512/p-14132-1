@@ -69,10 +69,12 @@ logging:
     org.hibernate.orm.jdbc.extract: TRACE
     org.springframework.transaction.interceptor: TRACE
 custom:
+  internalHost: http://localhost:8080
   jwt:
     secretKey: ${CUSTOM__JWT__SECRET_KEY}
   accessToken:
     expirationSeconds: "#{60*20}"
+  systemMemberApiKey: ${CUSTOM__JWT__SECRET_KEY}
   notProdMembers:
     - username: KAKAO__4707664779
       apiKey: kakao__1

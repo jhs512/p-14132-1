@@ -1,5 +1,7 @@
 package com.back.global.task.app
 
+import com.back.global.app.config.AppConfig
+import com.back.global.task.config.TaskHandlerRegistry
 import com.back.global.task.domain.Task
 import com.back.global.task.out.TaskRepository
 import com.back.standard.dto.TaskPayload
@@ -9,10 +11,11 @@ import java.util.*
 
 @Service
 class TaskFacade(
-    private val taskRepository: TaskRepository
+    private val taskRepository: TaskRepository,
+    private val taskHandlerRegistry: TaskHandlerRegistry
 ) {
     fun add(payload: TaskPayload) {
-        taskRepository.save(
+        val task = taskRepository.save(
             Task(
                 UUID.randomUUID(),
                 payload.aggregateType,
@@ -21,5 +24,15 @@ class TaskFacade(
                 Ut.JSON.toString(payload)
             )
         )
+
+        if (AppConfig.isNotProd) {
+            fire(payload)
+            task.markCompleted()
+        }
+    }
+
+    fun fire(payload: TaskPayload) {
+        val handler = taskHandlerRegistry.getHandler(payload::class.java)
+        handler?.method?.invoke(handler.bean, payload)
     }
 }

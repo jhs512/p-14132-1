@@ -1,7 +1,6 @@
-package com.back.boundedContexts.member.member.repository
+package com.back.boundedContexts.member.out.shared
 
 import com.back.boundedContexts.member.domain.shared.MemberProxy
-import com.back.boundedContexts.member.out.shared.MemberRepository
 import com.back.standard.extensions.getOrThrow
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
@@ -13,8 +12,6 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.transaction.annotation.Transactional
-import kotlin.collections.all
-import kotlin.collections.map
 
 @ActiveProfiles("test")
 @SpringBootTest
@@ -230,11 +227,14 @@ class MemberRepositoryTest {
     @DisplayName("findByUsernameContaining with Pageable")
     fun t23() {
         val pageable = PageRequest.of(
-            0, 2,
-            Sort.by("id").descending()
+            0,
+            2,
+            Sort.by("id")
+                .descending()
                 .and(Sort.by("username").ascending())
                 .and(Sort.by("nickname").descending())
         )
+
         val page = memberRepository.findByUsernameContaining("user", pageable)
 
         for (i in 0 until page.content.size - 1) {
@@ -246,11 +246,14 @@ class MemberRepositoryTest {
     @DisplayName("findQByUsernameContaining with Pageable")
     fun t24() {
         val pageable = PageRequest.of(
-            0, 2,
-            Sort.by("id").descending()
+            0,
+            2,
+            Sort.by("id")
+                .descending()
                 .and(Sort.by("username").ascending())
                 .and(Sort.by("nickname").descending())
         )
+
         val page = memberRepository.findQByUsernameContaining("user", pageable)
 
         for (i in 0 until page.content.size - 1) {
@@ -266,11 +269,11 @@ class MemberRepositoryTest {
     }
 
     @Test
-    @DisplayName("findByUsername twice, no cached")
+    @DisplayName("findByUsername twice, cached")
     fun t26() {
         memberRepository.findByUsername("user1") // SELECT
         memberRepository.findByUsername("user1") // CACHED
-        memberRepository.findById(3) // CACHED
+        memberRepository.findById(4) // CACHED
     }
 
     @Test
@@ -299,15 +302,15 @@ class MemberRepositoryTest {
         assertThat(member.username).isEqualTo("system")
         assertThat(member.nickname).isEqualTo("시스템")
         assertThat(member.name).isEqualTo("시스템")
-        assertThat(member.redirectToProfileImgUrlOrDefault).endsWith("/api/v1/members/1/redirectToProfileImg")
+        assertThat(member.redirectToProfileImgUrlOrDefault).endsWith("/member/api/v1/members/1/redirectToProfileImg")
         assertThat(member.isAdmin).isEqualTo(true)
         assertThat(member.authorities).hasSize(1)
         assertThat(member.authoritiesAsStringList).containsExactly("ROLE_ADMIN")
         assertThat(member).isEqualTo(realMember)
 
         // fulfill 필요함
-        assertThat(member.createDate).isNotNull
-        assertThat(member.modifyDate).isNotNull
+        assertThat(member.createdAt).isNotNull
+        assertThat(member.modifiedAt).isNotNull
         assertThat(member.profileImgUrl).isBlank
         assertThat(member.apiKey).isNotNull
         assertThat(member.password).isNotNull

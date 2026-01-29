@@ -3,8 +3,8 @@ package com.back.boundedContexts.member.`in`
 import com.back.boundedContexts.member.app.MemberFacade
 import com.back.boundedContexts.member.dto.MemberDto
 import com.back.boundedContexts.member.dto.MemberWithUsernameDto
-import com.back.global.exception.app.BusinessException
 import com.back.global.dto.RsData
+import com.back.global.exception.app.BusinessException
 import com.back.global.web.Rq
 import com.back.standard.extensions.getOrThrow
 import io.swagger.v3.oas.annotations.Operation
@@ -22,13 +22,17 @@ import java.net.URI
 import java.util.concurrent.TimeUnit
 
 @RestController
-@RequestMapping("/api/v1/members")
+@RequestMapping("/member/api/v1/members")
 @Tag(name = "ApiV1ActorController", description = "API 회원 컨트롤러")
 @SecurityRequirement(name = "bearerAuth")
 class ApiV1MemberController(
     private val memberFacade: MemberFacade,
     private val rq: Rq
 ) {
+    @GetMapping("/randomSecureTip")
+    @Operation(summary = "랜덤하게 보안 팁 반환")
+    fun randomSecureTip() = "비밀번호는 영문, 숫자, 특수문자를 조합하여 8자 이상으로 설정하세요."
+
     @GetMapping("/{id}/redirectToProfileImg")
     @ResponseStatus(HttpStatus.FOUND)
     @Transactional(readOnly = true)

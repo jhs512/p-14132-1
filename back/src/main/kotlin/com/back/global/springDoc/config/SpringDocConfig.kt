@@ -16,7 +16,23 @@ class SpringDocConfig {
     fun groupApiV1(): GroupedOpenApi {
         return GroupedOpenApi.builder()
             .group("apiV1")
-            .pathsToMatch("/api/v1/**")
+            .pathsToMatch("/*/api/v1/**")
+            .build()
+    }
+
+    @Bean
+    fun groupMemberApiV1(): GroupedOpenApi {
+        return GroupedOpenApi.builder()
+            .group("memberApiV1")
+            .pathsToMatch("/member/api/v1/**")
+            .build()
+    }
+
+    @Bean
+    fun groupPostApiV1(): GroupedOpenApi {
+        return GroupedOpenApi.builder()
+            .group("postApiV1")
+            .pathsToMatch("/post/api/v1/**")
             .build()
     }
 
@@ -24,7 +40,7 @@ class SpringDocConfig {
     fun groupController(): GroupedOpenApi {
         return GroupedOpenApi.builder()
             .group("controller")
-            .pathsToExclude("/api/**")
+            .pathsToExclude("/*/api/v1/**")
             .build()
     }
 }

@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Profile
 class DevInitData {
     @Bean
     fun devInitDataApplicationRunner(): ApplicationRunner {
-        return ApplicationRunner { args: ApplicationArguments ->
+        return ApplicationRunner { _: ApplicationArguments ->
             Ut.CMD.runAsync(
                 "npx{{DOT_CMD}}",
                 "--yes",

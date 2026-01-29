@@ -13,7 +13,9 @@ export default function Page() {
   const [posts, setPosts] = useState<PostDto[] | null>(null);
 
   useEffect(() => {
-    client.GET("/api/v1/posts").then((res) => res.data && setPosts(res.data));
+    client
+      .GET("/post/api/v1/posts")
+      .then((res) => res.data && setPosts(res.data.content));
   }, []);
 
   if (posts == null) return <div>로딩중...</div>;

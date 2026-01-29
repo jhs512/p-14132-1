@@ -51,7 +51,7 @@ export default withLogout(function Page() {
     }
 
     client
-      .POST("/api/v1/members/login", {
+      .POST("/member/api/v1/members/login", {
         body: {
           username: usernameInput.value,
           password: passwordInput.value,

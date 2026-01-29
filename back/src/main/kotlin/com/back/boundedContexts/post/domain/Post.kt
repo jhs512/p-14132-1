@@ -33,7 +33,7 @@ class Post(
         set(value) {
             if (body.content != value) {
                 body.content = value
-                updateModifyDate()
+                updateModifiedAt()
             }
         }
 

@@ -1,4 +1,4 @@
-package com.back.boundedContexts.member.member.controller
+package com.back.boundedContexts.member.`in`
 
 import com.back.boundedContexts.member.`in`.ApiV1AdmMemberController
 import com.back.boundedContexts.member.app.MemberFacade
@@ -34,7 +34,7 @@ class ApiV1AdmMemberControllerTest {
     fun t1() {
         val resultActions = mvc
             .perform(
-                get("/api/v1/adm/members?page=1&pageSize=5")
+                get("/member/api/v1/adm/members?page=1&pageSize=5")
             )
             .andDo(print())
 
@@ -51,12 +51,12 @@ class ApiV1AdmMemberControllerTest {
             resultActions
                 .andExpect(jsonPath("$.content[$i].id").value(member.id))
                 .andExpect(
-                    jsonPath("$.content[$i].createDate")
-                        .value(Matchers.startsWith(member.createDate.toString().take(20)))
+                    jsonPath("$.content[$i].createdAt")
+                        .value(Matchers.startsWith(member.createdAt.toString().take(20)))
                 )
                 .andExpect(
-                    jsonPath("$.content[$i].modifyDate")
-                        .value(Matchers.startsWith(member.modifyDate.toString().take(20)))
+                    jsonPath("$.content[$i].modifiedAt")
+                        .value(Matchers.startsWith(member.modifiedAt.toString().take(20)))
                 )
                 .andExpect(jsonPath("$.content[$i].name").value(member.name))
                 .andExpect(jsonPath("$.content[$i].username").value(member.username))
@@ -70,7 +70,7 @@ class ApiV1AdmMemberControllerTest {
     fun t3() {
         val resultActions = mvc
             .perform(
-                get("/api/v1/adm/members")
+                get("/member/api/v1/adm/members")
             )
             .andDo(print())
 
@@ -88,7 +88,7 @@ class ApiV1AdmMemberControllerTest {
 
         val resultActions = mvc
             .perform(
-                get("/api/v1/adm/members/$id")
+                get("/member/api/v1/adm/members/$id")
             )
             .andDo(print())
 
@@ -100,12 +100,12 @@ class ApiV1AdmMemberControllerTest {
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.id").value(member.id))
             .andExpect(
-                jsonPath("$.createDate")
-                    .value(Matchers.startsWith(member.createDate.toString().take(20)))
+                jsonPath("$.createdAt")
+                    .value(Matchers.startsWith(member.createdAt.toString().take(20)))
             )
             .andExpect(
-                jsonPath("$.modifyDate")
-                    .value(Matchers.startsWith(member.modifyDate.toString().take(20)))
+                jsonPath("$.modifiedAt")
+                    .value(Matchers.startsWith(member.modifiedAt.toString().take(20)))
             )
             .andExpect(jsonPath("$.name").value(member.name))
             .andExpect(jsonPath("$.username").value(member.username))
@@ -120,7 +120,7 @@ class ApiV1AdmMemberControllerTest {
 
         val resultActions = mvc
             .perform(
-                get("/api/v1/adm/members/$id")
+                get("/member/api/v1/adm/members/$id")
             )
             .andDo(print())
 

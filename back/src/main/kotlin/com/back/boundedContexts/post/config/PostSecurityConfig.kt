@@ -8,10 +8,10 @@ import org.springframework.stereotype.Component
 class PostSecurityConfig {
     fun configure(authorize: AuthorizeHttpRequestsDsl) {
         authorize.apply {
-            authorize(HttpMethod.GET, "/api/*/posts", permitAll)
-            authorize(HttpMethod.GET, "/api/*/posts/{id:\\d+}", permitAll)
-            authorize(HttpMethod.GET, "/api/*/posts/{postId:\\d+}/comments", permitAll)
-            authorize(HttpMethod.GET, "/api/*/posts/{postId:\\d+}/comments/{id:\\d+}", permitAll)
+            authorize(HttpMethod.GET, "/post/api/*/posts", permitAll)
+            authorize(HttpMethod.GET, "/post/api/*/posts/{id:\\d+}", permitAll)
+            authorize(HttpMethod.GET, "/post/api/*/posts/{postId:\\d+}/comments", permitAll)
+            authorize(HttpMethod.GET, "/post/api/*/posts/{postId:\\d+}/comments/{id:\\d+}", permitAll)
         }
     }
 }

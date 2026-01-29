@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*
 
 
 @RestController
-@RequestMapping("/api/v1/adm/members")
+@RequestMapping("/member/api/v1/adm/members")
 @Tag(name = "ApiV1AdmMemberController", description = "관리자용 API 회원 컨트롤러")
 @SecurityRequirement(name = "bearerAuth")
 class ApiV1AdmMemberController(

@@ -3,12 +3,12 @@ package com.back.boundedContexts.member.dto
 import com.back.boundedContexts.member.domain.shared.Member
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.time.LocalDateTime
+import java.time.Instant
 
 data class MemberWithUsernameDto @JsonCreator constructor(
     val id: Int,
-    val createDate: LocalDateTime,
-    val modifyDate: LocalDateTime,
+    val createdAt: Instant,
+    val modifiedAt: Instant,
     @get:JsonProperty("isAdmin")
     val isAdmin: Boolean,
     val username: String,
@@ -17,8 +17,8 @@ data class MemberWithUsernameDto @JsonCreator constructor(
 ) {
     constructor(member: Member) : this(
         member.id,
-        member.createDate,
-        member.modifyDate,
+        member.createdAt,
+        member.modifiedAt,
         member.isAdmin,
         member.username,
         member.name,

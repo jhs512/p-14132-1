@@ -4,7 +4,7 @@
  */
 
 export interface paths {
-    "/api/v1/posts/{postId}/comments/{id}": {
+    "/post/api/v1/posts/{postId}/comments/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -23,7 +23,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/posts/{id}": {
+    "/post/api/v1/posts/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -42,7 +42,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/posts": {
+    "/post/api/v1/posts": {
         parameters: {
             query?: never;
             header?: never;
@@ -60,7 +60,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/posts/{postId}/comments": {
+    "/post/api/v1/posts/{postId}/comments": {
         parameters: {
             query?: never;
             header?: never;
@@ -78,7 +78,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/members": {
+    "/member/api/v1/members": {
         parameters: {
             query?: never;
             header?: never;
@@ -95,7 +95,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/members/login": {
+    "/member/api/v1/members/login": {
         parameters: {
             query?: never;
             header?: never;
@@ -112,41 +112,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/members/{id}/redirectToProfileImg": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** 프로필 이미지 리다이렉트(브라우저 캐시 20분) */
-        get: operations["redirectToProfileImg"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/members/me": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** 내 정보 */
-        get: operations["me"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/adm/posts/count": {
+    "/post/api/v1/adm/posts/count": {
         parameters: {
             query?: never;
             header?: never;
@@ -163,7 +129,58 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/adm/members": {
+    "/member/api/v1/members/{id}/redirectToProfileImg": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 프로필 이미지 리다이렉트(브라우저 캐시 20분) */
+        get: operations["redirectToProfileImg"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/member/api/v1/members/randomSecureTip": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 랜덤하게 보안 팁 반환 */
+        get: operations["randomSecureTip"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/member/api/v1/members/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 내 정보 */
+        get: operations["me"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/member/api/v1/adm/members": {
         parameters: {
             query?: never;
             header?: never;
@@ -180,7 +197,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/adm/members/{id}": {
+    "/member/api/v1/adm/members/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -197,7 +214,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/members/logout": {
+    "/member/api/v1/members/logout": {
         parameters: {
             query?: never;
             header?: never;
@@ -238,9 +255,9 @@ export interface components {
             /** Format: int32 */
             id: number;
             /** Format: date-time */
-            createDate: string;
+            createdAt: string;
             /** Format: date-time */
-            modifyDate: string;
+            modifiedAt: string;
             /** Format: int32 */
             authorId: number;
             authorName: string;
@@ -259,9 +276,9 @@ export interface components {
             /** Format: int32 */
             id: number;
             /** Format: date-time */
-            createDate: string;
+            createdAt: string;
             /** Format: date-time */
-            modifyDate: string;
+            modifiedAt: string;
             /** Format: int32 */
             authorId: number;
             authorName: string;
@@ -284,9 +301,9 @@ export interface components {
             /** Format: int32 */
             id: number;
             /** Format: date-time */
-            createDate: string;
+            createdAt: string;
             /** Format: date-time */
-            modifyDate: string;
+            modifiedAt: string;
             isAdmin: boolean;
             name: string;
             profileImageUrl: string;
@@ -333,9 +350,9 @@ export interface components {
             /** Format: int32 */
             id: number;
             /** Format: date-time */
-            createDate: string;
+            createdAt: string;
             /** Format: date-time */
-            modifyDate: string;
+            modifiedAt: string;
             /** Format: int32 */
             authorId: number;
             authorName: string;
@@ -343,21 +360,22 @@ export interface components {
             title: string;
             content: string;
         };
+        AdmPostCountResBody: {
+            /** Format: int64 */
+            all: number;
+            secureTip: string;
+        };
         MemberWithUsernameDto: {
             /** Format: int32 */
             id: number;
             /** Format: date-time */
-            createDate: string;
+            createdAt: string;
             /** Format: date-time */
-            modifyDate: string;
+            modifiedAt: string;
             isAdmin: boolean;
             username: string;
             name: string;
             profileImageUrl: string;
-        };
-        AdmPostCountResBody: {
-            /** Format: int64 */
-            all: number;
         };
         PageDtoMemberWithUsernameDto: {
             content: components["schemas"]["MemberWithUsernameDto"][];
@@ -769,6 +787,35 @@ export interface operations {
             };
         };
     };
+    count: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json;charset=UTF-8": components["schemas"]["AdmPostCountResBody"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json;charset=UTF-8": components["schemas"]["RsDataVoid"];
+                };
+            };
+        };
+    };
     redirectToProfileImg: {
         parameters: {
             query?: never;
@@ -798,6 +845,35 @@ export interface operations {
             };
         };
     };
+    randomSecureTip: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json;charset=UTF-8": string;
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json;charset=UTF-8": components["schemas"]["RsDataVoid"];
+                };
+            };
+        };
+    };
     me: {
         parameters: {
             query?: never;
@@ -814,35 +890,6 @@ export interface operations {
                 };
                 content: {
                     "application/json;charset=UTF-8": components["schemas"]["MemberWithUsernameDto"];
-                };
-            };
-            /** @description Bad Request */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json;charset=UTF-8": components["schemas"]["RsDataVoid"];
-                };
-            };
-        };
-    };
-    count: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json;charset=UTF-8": components["schemas"]["AdmPostCountResBody"];
                 };
             };
             /** @description Bad Request */

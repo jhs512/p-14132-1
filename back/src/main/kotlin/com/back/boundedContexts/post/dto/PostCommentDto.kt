@@ -2,12 +2,12 @@ package com.back.boundedContexts.post.dto
 
 import com.back.boundedContexts.post.domain.PostComment
 import com.fasterxml.jackson.annotation.JsonCreator
-import java.time.LocalDateTime
+import java.time.Instant
 
 data class PostCommentDto @JsonCreator constructor(
     val id: Int,
-    val createDate: LocalDateTime,
-    val modifyDate: LocalDateTime,
+    val createdAt: Instant,
+    val modifiedAt: Instant,
     val authorId: Int,
     val authorName: String,
     val authorProfileImgUrl: String,
@@ -16,8 +16,8 @@ data class PostCommentDto @JsonCreator constructor(
 ) {
     constructor(postComment: PostComment) : this(
         postComment.id,
-        postComment.createDate,
-        postComment.modifyDate,
+        postComment.createdAt,
+        postComment.modifiedAt,
         postComment.author.id,
         postComment.author.name,
         postComment.author.redirectToProfileImgUrlOrDefault,

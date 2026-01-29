@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/api/v1/posts/{postId}/comments")
+@RequestMapping("/post/api/v1/posts/{postId}/comments")
 @Tag(name = "ApiV1PostCommentController", description = "API 댓글 컨트롤러")
 @SecurityRequirement(name = "bearerAuth")
 class ApiV1PostCommentController(

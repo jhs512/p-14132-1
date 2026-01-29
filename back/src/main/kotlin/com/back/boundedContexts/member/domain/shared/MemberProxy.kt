@@ -13,16 +13,16 @@ class MemberProxy(
             real.nickname = value
         }
 
-    override var createDate
-        get() = real.createDate
+    override var createdAt
+        get() = real.createdAt
         set(value) {
-            real.createDate = value
+            real.createdAt = value
         }
 
-    override var modifyDate
-        get() = real.modifyDate
+    override var modifiedAt
+        get() = real.modifiedAt
         set(value) {
-            real.modifyDate = value
+            real.modifiedAt = value
         }
 
     override var profileImgUrl

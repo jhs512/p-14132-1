@@ -47,7 +47,7 @@ export default withLogin(function Page() {
     }
 
     client
-      .POST("/api/v1/posts", {
+      .POST("/post/api/v1/posts", {
         body: {
           title: titleInput.value,
           content: contentTextarea.value,

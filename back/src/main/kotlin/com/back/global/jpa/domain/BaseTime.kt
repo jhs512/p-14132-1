@@ -5,7 +5,7 @@ import jakarta.persistence.MappedSuperclass
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
-import java.time.LocalDateTime
+import java.time.Instant
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener::class)
@@ -13,12 +13,12 @@ abstract class BaseTime(
     id: Int = 0
 ) : BaseEntity(id) {
     @CreatedDate
-    lateinit var createDate: LocalDateTime
+    lateinit var createdAt: Instant
 
     @LastModifiedDate
-    lateinit var modifyDate: LocalDateTime
+    lateinit var modifiedAt: Instant
 
-    fun updateModifyDate() {
-        this.modifyDate = LocalDateTime.now()
+    fun updateModifiedAt() {
+        this.modifiedAt = Instant.now()
     }
 }

@@ -1,4 +1,4 @@
-package com.back.boundedContexts.member.member.controller
+package com.back.boundedContexts.member.`in`
 
 import com.back.boundedContexts.member.`in`.ApiV1MemberController
 import com.back.boundedContexts.member.app.shared.ActorFacade
@@ -38,7 +38,7 @@ class ApiV1MemberControllerTest {
     fun t1() {
         val resultActions = mvc
             .perform(
-                post("/api/v1/members")
+                post("/member/api/v1/members")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(
                         """
@@ -62,8 +62,8 @@ class ApiV1MemberControllerTest {
             .andExpect(jsonPath("$.msg").value("${member.name}님 환영합니다. 회원가입이 완료되었습니다."))
             .andExpect(jsonPath("$.data").exists())
             .andExpect(jsonPath("$.data.id").value(member.id))
-            .andExpect(jsonPath("$.data.createDate").value(Matchers.startsWith(member.createDate.toString().take(20))))
-            .andExpect(jsonPath("$.data.modifyDate").value(Matchers.startsWith(member.modifyDate.toString().take(20))))
+            .andExpect(jsonPath("$.data.createdAt").value(Matchers.startsWith(member.createdAt.toString().take(20))))
+            .andExpect(jsonPath("$.data.modifiedAt").value(Matchers.startsWith(member.modifiedAt.toString().take(20))))
             .andExpect(jsonPath("$.data.name").value(member.name))
             .andExpect(jsonPath("$.data.isAdmin").value(member.isAdmin))
     }
@@ -73,7 +73,7 @@ class ApiV1MemberControllerTest {
     fun t2() {
         val resultActions = mvc
             .perform(
-                post("/api/v1/members/login")
+                post("/member/api/v1/members/login")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(
                         """
@@ -98,16 +98,16 @@ class ApiV1MemberControllerTest {
             .andExpect(jsonPath("$.data.item").exists())
             .andExpect(jsonPath("$.data.item.id").value(member.id))
             .andExpect(
-                jsonPath("$.data.item.createDate").value(
+                jsonPath("$.data.item.createdAt").value(
                     Matchers.startsWith(
-                        member.createDate.toString().take(20)
+                        member.createdAt.toString().take(20)
                     )
                 )
             )
             .andExpect(
-                jsonPath("$.data.item.modifyDate").value(
+                jsonPath("$.data.item.modifiedAt").value(
                     Matchers.startsWith(
-                        member.modifyDate.toString().take(20)
+                        member.modifiedAt.toString().take(20)
                     )
                 )
             )
@@ -135,7 +135,7 @@ class ApiV1MemberControllerTest {
     fun t3() {
         val resultActions = mvc
             .perform(
-                get("/api/v1/members/me")
+                get("/member/api/v1/members/me")
             )
             .andDo(print())
 
@@ -146,8 +146,8 @@ class ApiV1MemberControllerTest {
             .andExpect(handler().methodName("me"))
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.id").value(member.id))
-            .andExpect(jsonPath("$.createDate").value(Matchers.startsWith(member.createDate.toString().take(20))))
-            .andExpect(jsonPath("$.modifyDate").value(Matchers.startsWith(member.modifyDate.toString().take(20))))
+            .andExpect(jsonPath("$.createdAt").value(Matchers.startsWith(member.createdAt.toString().take(20))))
+            .andExpect(jsonPath("$.modifiedAt").value(Matchers.startsWith(member.modifiedAt.toString().take(20))))
             .andExpect(jsonPath("$.name").value(member.name))
             .andExpect(jsonPath("$.username").value(member.username))
             .andExpect(jsonPath("$.isAdmin").value(member.isAdmin))
@@ -161,7 +161,7 @@ class ApiV1MemberControllerTest {
 
         val resultActions = mvc
             .perform(
-                get("/api/v1/members/me")
+                get("/member/api/v1/members/me")
                     .cookie(Cookie("apiKey", actorApiKey))
             )
             .andDo(print())
@@ -177,7 +177,7 @@ class ApiV1MemberControllerTest {
     fun t6() {
         val resultActions = mvc
             .perform(
-                delete("/api/v1/members/logout")
+                delete("/member/api/v1/members/logout")
             )
             .andDo(print())
 
@@ -210,7 +210,7 @@ class ApiV1MemberControllerTest {
 
         val resultActions = mvc
             .perform(
-                get("/api/v1/members/me")
+                get("/member/api/v1/members/me")
                     .header(HttpHeaders.AUTHORIZATION, "Bearer $actorApiKey wrong-access-token")
             )
             .andDo(print())
@@ -238,7 +238,7 @@ class ApiV1MemberControllerTest {
     fun t8() {
         val resultActions = mvc
             .perform(
-                get("/api/v1/members/me")
+                get("/member/api/v1/members/me")
                     .header(HttpHeaders.AUTHORIZATION, "key")
             )
             .andDo(print())

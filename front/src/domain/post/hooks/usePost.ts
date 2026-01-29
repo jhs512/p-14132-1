@@ -11,7 +11,7 @@ export default function usePost(id: number) {
 
   useEffect(() => {
     client
-      .GET("/api/v1/posts/{id}", {
+      .GET("/post/api/v1/posts/{id}", {
         params: {
           path: {
             id,
@@ -30,7 +30,7 @@ export default function usePost(id: number) {
 
   const deletePost = (id: number, onSuccess: () => void) => {
     client
-      .DELETE("/api/v1/posts/{id}", {
+      .DELETE("/post/api/v1/posts/{id}", {
         params: {
           path: {
             id,
@@ -54,7 +54,7 @@ export default function usePost(id: number) {
     onSuccess: (res: RsDataVoid) => void,
   ) => {
     client
-      .PUT("/api/v1/posts/{id}", {
+      .PUT("/post/api/v1/posts/{id}", {
         params: {
           path: {
             id,

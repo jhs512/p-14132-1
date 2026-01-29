@@ -15,8 +15,8 @@ export default withAdmin(function Page() {
 
   useEffect(() => {
     client
-      .GET("/api/v1/adm/members")
-      .then((res) => res.data && setMembers(res.data));
+      .GET("/member/api/v1/adm/members")
+      .then((res) => res.data && setMembers(res.data.content));
   }, []);
 
   if (members == null) return <div>로딩중...</div>;
@@ -31,7 +31,7 @@ export default withAdmin(function Page() {
         <ul>
           {members.map((member) => (
             <li key={member.id}>
-              <Link href={`/members/${member.id}`}>
+              <Link href={`./members/${member.id}`}>
                 {member.id} : {member.username} / {member.name}
               </Link>
             </li>

@@ -1,6 +1,5 @@
-package com.back.boundedContexts.post.post.controller
+package com.back.boundedContexts.post.`in`
 
-import com.back.boundedContexts.post.`in`.ApiV1AdmPostController
 import com.back.boundedContexts.post.app.PostFacade
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -26,14 +25,13 @@ class ApiV1AdmPostControllerTest {
     @Autowired
     private lateinit var postFacade: PostFacade
 
-
     @Test
     @DisplayName("count")
     @WithUserDetails("admin")
     fun t1() {
         val resultActions = mvc
             .perform(
-                get("/api/v1/adm/posts/count")
+                get("/post/api/v1/adm/posts/count")
             )
             .andDo(print())
 
@@ -42,5 +40,6 @@ class ApiV1AdmPostControllerTest {
             .andExpect(handler().methodName("count"))
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.all").value(postFacade.count()))
+            .andExpect(jsonPath("$.secureTip").isNotEmpty())
     }
 }

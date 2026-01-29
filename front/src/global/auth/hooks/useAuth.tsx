@@ -13,7 +13,7 @@ export default function useAuth() {
   const isAdmin = isLogin && loginMember.isAdmin;
 
   useEffect(() => {
-    client.GET("/api/v1/members/me").then((res) => {
+    client.GET("/member/api/v1/members/me").then((res) => {
       if (res.error) return;
 
       setLoginMember(res.data);
@@ -25,7 +25,7 @@ export default function useAuth() {
   };
 
   const logout = (onSuccess: () => void) => {
-    client.DELETE("/api/v1/members/logout").then((res) => {
+    client.DELETE("/member/api/v1/members/logout").then((res) => {
       if (res.error) {
         alert(res.error.msg);
         return;

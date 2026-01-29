@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/api/v1/posts")
+@RequestMapping("/post/api/v1/posts")
 @Tag(name = "ApiV1PostController", description = "API 글 컨트롤러")
 @SecurityRequirement(name = "bearerAuth")
 class ApiV1PostController(

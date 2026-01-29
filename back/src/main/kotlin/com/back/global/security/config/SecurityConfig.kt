@@ -45,12 +45,14 @@ class SecurityConfig(
                 // ================================
                 // Admin
                 // ================================
-                authorize("/api/*/adm/**", hasRole("ADMIN"))
+                authorize("/member/api/*/adm/**", hasRole("ADMIN"))
+                authorize("/post/api/*/adm/**", hasRole("ADMIN"))
 
                 // ================================
                 // 기본 규칙
                 // ================================
-                authorize("/api/*/**", authenticated)
+                authorize("/member/api/*/**", authenticated)
+                authorize("/post/api/*/**", authenticated)
                 authorize(anyRequest, permitAll)
             }
 
@@ -113,7 +115,8 @@ class SecurityConfig(
         }
 
         return UrlBasedCorsConfigurationSource().apply {
-            registerCorsConfiguration("/api/**", configuration)
+            registerCorsConfiguration("/member/api/**", configuration)
+            registerCorsConfiguration("/post/api/**", configuration)
         }
     }
 }

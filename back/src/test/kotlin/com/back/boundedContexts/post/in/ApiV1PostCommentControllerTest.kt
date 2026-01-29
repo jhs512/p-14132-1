@@ -1,4 +1,4 @@
-package com.back.boundedContexts.post.postComment.controller
+package com.back.boundedContexts.post.`in`
 
 import com.back.boundedContexts.member.app.shared.ActorFacade
 import com.back.boundedContexts.post.app.PostFacade
@@ -43,7 +43,7 @@ class ApiV1PostCommentControllerTest {
 
         val resultActions = mvc
             .perform(
-                get("/api/v1/posts/$postId/comments/$id")
+                get("/post/api/v1/posts/$postId/comments/$id")
             )
             .andDo(print())
 
@@ -55,8 +55,8 @@ class ApiV1PostCommentControllerTest {
             .andExpect(handler().methodName("getItem"))
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.id").value(postComment.id))
-            .andExpect(jsonPath("$.createDate").value(Matchers.startsWith(postComment.createDate.toString().take(20))))
-            .andExpect(jsonPath("$.modifyDate").value(Matchers.startsWith(postComment.modifyDate.toString().take(20))))
+            .andExpect(jsonPath("$.createdAt").value(Matchers.startsWith(postComment.createdAt.toString().take(20))))
+            .andExpect(jsonPath("$.modifiedAt").value(Matchers.startsWith(postComment.modifiedAt.toString().take(20))))
             .andExpect(jsonPath("$.authorId").value(postComment.author.id))
             .andExpect(jsonPath("$.authorName").value(postComment.author.name))
             .andExpect(jsonPath("$.postId").value(postComment.post.id))
@@ -70,7 +70,7 @@ class ApiV1PostCommentControllerTest {
 
         val resultActions = mvc
             .perform(
-                get("/api/v1/posts/$postId/comments")
+                get("/post/api/v1/posts/$postId/comments")
             )
             .andDo(print())
 
@@ -89,16 +89,16 @@ class ApiV1PostCommentControllerTest {
             resultActions
                 .andExpect(jsonPath("$[$i].id").value(postComment.id))
                 .andExpect(
-                    jsonPath("$[$i].createDate").value(
+                    jsonPath("$[$i].createdAt").value(
                         Matchers.startsWith(
-                            postComment.createDate.toString().take(20)
+                            postComment.createdAt.toString().take(20)
                         )
                     )
                 )
                 .andExpect(
-                    jsonPath("$[$i].modifyDate").value(
+                    jsonPath("$[$i].modifiedAt").value(
                         Matchers.startsWith(
-                            postComment.modifyDate.toString().take(20)
+                            postComment.modifiedAt.toString().take(20)
                         )
                     )
                 )
@@ -118,7 +118,7 @@ class ApiV1PostCommentControllerTest {
 
         val resultActions = mvc
             .perform(
-                delete("/api/v1/posts/$postId/comments/$id")
+                delete("/post/api/v1/posts/$postId/comments/$id")
             )
             .andDo(print())
 
@@ -139,7 +139,7 @@ class ApiV1PostCommentControllerTest {
 
         val resultActions = mvc
             .perform(
-                delete("/api/v1/posts/$postId/comments/$id")
+                delete("/post/api/v1/posts/$postId/comments/$id")
             )
             .andDo(print())
 
@@ -160,7 +160,7 @@ class ApiV1PostCommentControllerTest {
 
         val resultActions = mvc
             .perform(
-                put("/api/v1/posts/$postId/comments/$id")
+                put("/post/api/v1/posts/$postId/comments/$id")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(
                         """
@@ -189,7 +189,7 @@ class ApiV1PostCommentControllerTest {
 
         val resultActions = mvc
             .perform(
-                put("/api/v1/posts/$postId/comments/$id")
+                put("/post/api/v1/posts/$postId/comments/$id")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(
                         """
@@ -217,7 +217,7 @@ class ApiV1PostCommentControllerTest {
 
         val resultActions = mvc
             .perform(
-                post("/api/v1/posts/$postId/comments")
+                post("/post/api/v1/posts/$postId/comments")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(
                         """
@@ -240,16 +240,16 @@ class ApiV1PostCommentControllerTest {
             .andExpect(jsonPath("$.msg").value("${postComment.id}번 댓글이 작성되었습니다."))
             .andExpect(jsonPath("$.data.id").value(postComment.id))
             .andExpect(
-                jsonPath("$.data.createDate").value(
+                jsonPath("$.data.createdAt").value(
                     Matchers.startsWith(
-                        postComment.createDate.toString().take(20)
+                        postComment.createdAt.toString().take(20)
                     )
                 )
             )
             .andExpect(
-                jsonPath("$.data.modifyDate").value(
+                jsonPath("$.data.modifiedAt").value(
                     Matchers.startsWith(
-                        postComment.modifyDate.toString().take(20)
+                        postComment.modifiedAt.toString().take(20)
                     )
                 )
             )

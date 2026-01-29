@@ -1,4 +1,4 @@
-package com.back.boundedContexts.post.post.controller
+package com.back.boundedContexts.post.`in`
 
 
 import com.back.boundedContexts.member.app.shared.ActorFacade
@@ -45,7 +45,7 @@ class ApiV1PostControllerTest {
     fun t1() {
         val resultActions = mvc
             .perform(
-                post("/api/v1/posts")
+                post("/post/api/v1/posts")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(
                         """
@@ -67,8 +67,8 @@ class ApiV1PostControllerTest {
             .andExpect(jsonPath("$.resultCode").value("201-1"))
             .andExpect(jsonPath("$.msg").value("%d번 글이 작성되었습니다.".format(post.id)))
             .andExpect(jsonPath("$.data.id").value(post.id))
-            .andExpect(jsonPath("$.data.createDate").value(Matchers.startsWith(post.createDate.toString().take(20))))
-            .andExpect(jsonPath("$.data.modifyDate").value(Matchers.startsWith(post.modifyDate.toString().take(20))))
+            .andExpect(jsonPath("$.data.createdAt").value(Matchers.startsWith(post.createdAt.toString().take(20))))
+            .andExpect(jsonPath("$.data.modifiedAt").value(Matchers.startsWith(post.modifiedAt.toString().take(20))))
             .andExpect(jsonPath("$.data.authorId").value(post.author.id))
             .andExpect(jsonPath("$.data.authorName").value(post.author.name))
             .andExpect(jsonPath("$.data.title").value("제목"))
@@ -82,7 +82,7 @@ class ApiV1PostControllerTest {
 
         val resultActions = mvc
             .perform(
-                post("/api/v1/posts")
+                post("/post/api/v1/posts")
                     .header(HttpHeaders.AUTHORIZATION, "Bearer wrong-api-key $actorAccessToken")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(
@@ -110,7 +110,7 @@ class ApiV1PostControllerTest {
 
         val resultActions = mvc
             .perform(
-                post("/api/v1/posts")
+                post("/post/api/v1/posts")
                     .cookie(
                         Cookie("apiKey", "wrong-api-key"),
                         Cookie("accessToken", actorAccessToken)
@@ -139,7 +139,7 @@ class ApiV1PostControllerTest {
     fun t7() {
         val resultActions = mvc
             .perform(
-                post("/api/v1/posts")
+                post("/post/api/v1/posts")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(
                         """
@@ -173,7 +173,7 @@ class ApiV1PostControllerTest {
     fun t8() {
         val resultActions = mvc
             .perform(
-                post("/api/v1/posts")
+                post("/post/api/v1/posts")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(
                         """
@@ -214,7 +214,7 @@ class ApiV1PostControllerTest {
 
         val resultActions = mvc
             .perform(
-                post("/api/v1/posts")
+                post("/post/api/v1/posts")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(wrongJsonBody)
             )
@@ -235,7 +235,7 @@ class ApiV1PostControllerTest {
     fun t10() {
         val resultActions = mvc
             .perform(
-                post("/api/v1/posts")
+                post("/post/api/v1/posts")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(
                         """
@@ -259,7 +259,7 @@ class ApiV1PostControllerTest {
     fun t11() {
         val resultActions = mvc
             .perform(
-                post("/api/v1/posts")
+                post("/post/api/v1/posts")
                     .contentType(MediaType.APPLICATION_JSON)
                     .header(HttpHeaders.AUTHORIZATION, "Bearer wrong-api-key")
                     .content(
@@ -288,7 +288,7 @@ class ApiV1PostControllerTest {
 
         val resultActions = mvc
             .perform(
-                put("/api/v1/posts/$id")
+                put("/post/api/v1/posts/$id")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(
                         """
@@ -317,7 +317,7 @@ class ApiV1PostControllerTest {
 
         val resultActions = mvc
             .perform(
-                put("/api/v1/posts/$id")
+                put("/post/api/v1/posts/$id")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(
                         """
@@ -347,7 +347,7 @@ class ApiV1PostControllerTest {
 
         val resultActions = mvc
             .perform(
-                delete("/api/v1/posts/$id")
+                delete("/post/api/v1/posts/$id")
             )
             .andDo(print())
 
@@ -367,7 +367,7 @@ class ApiV1PostControllerTest {
 
         val resultActions = mvc
             .perform(
-                delete("/api/v1/posts/$id")
+                delete("/post/api/v1/posts/$id")
             )
             .andDo(print())
 
@@ -387,7 +387,7 @@ class ApiV1PostControllerTest {
 
         val resultActions = mvc
             .perform(
-                get("/api/v1/posts/$id")
+                get("/post/api/v1/posts/$id")
             )
             .andDo(print())
 
@@ -399,12 +399,12 @@ class ApiV1PostControllerTest {
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.id").value(post.id))
             .andExpect(
-                jsonPath("$.createDate")
-                    .value(Matchers.startsWith(post.createDate.toString().take(20)))
+                jsonPath("$.createdAt")
+                    .value(Matchers.startsWith(post.createdAt.toString().take(20)))
             )
             .andExpect(
-                jsonPath("$.modifyDate")
-                    .value(Matchers.startsWith(post.modifyDate.toString().take(20)))
+                jsonPath("$.modifiedAt")
+                    .value(Matchers.startsWith(post.modifiedAt.toString().take(20)))
             )
             .andExpect(jsonPath("$.authorId").value(post.author.id))
             .andExpect(jsonPath("$.authorName").value(post.author.name))
@@ -419,7 +419,7 @@ class ApiV1PostControllerTest {
 
         val resultActions = mvc
             .perform(
-                get("/api/v1/posts/$id")
+                get("/post/api/v1/posts/$id")
             )
             .andDo(print())
 
@@ -437,7 +437,7 @@ class ApiV1PostControllerTest {
     fun t5() {
         val resultActions = mvc
             .perform(
-                get("/api/v1/posts?page=1&pageSize=5")
+                get("/post/api/v1/posts?page=1&pageSize=5")
             )
             .andDo(print())
 
@@ -462,12 +462,12 @@ class ApiV1PostControllerTest {
             resultActions
                 .andExpect(jsonPath("$.content[%d].id".format(i)).value(post.id))
                 .andExpect(
-                    jsonPath("$.content[%d].createDate".format(i))
-                        .value(Matchers.startsWith(post.createDate.toString().take(20)))
+                    jsonPath("$.content[%d].createdAt".format(i))
+                        .value(Matchers.startsWith(post.createdAt.toString().take(20)))
                 )
                 .andExpect(
-                    jsonPath("$.content[%d].modifyDate".format(i))
-                        .value(Matchers.startsWith(post.modifyDate.toString().take(20)))
+                    jsonPath("$.content[%d].modifiedAt".format(i))
+                        .value(Matchers.startsWith(post.modifiedAt.toString().take(20)))
                 )
                 .andExpect(jsonPath("$.content[%d].authorId".format(i)).value(post.author.id))
                 .andExpect(jsonPath("$.content[%d].authorName".format(i)).value(post.author.name))
