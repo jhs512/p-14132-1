@@ -16,7 +16,7 @@ class Rq(
     private val resp: HttpServletResponse,
     private val actorFacade: ActorFacade,
 ) {
-    val actor: Member
+    val actorOrNull: Member?
         get() = (SecurityContextHolder.getContext()?.authentication?.principal as? SecurityUser)
             ?.let {
                 MemberProxy(
@@ -26,7 +26,9 @@ class Rq(
                     it.nickname
                 )
             }
-            ?: throw IllegalStateException("인증된 사용자가 없습니다.")
+
+    val actor: Member
+        get() = actorOrNull ?: throw IllegalStateException("인증된 사용자가 없습니다.")
 
     fun getHeader(name: String, defaultValue: String): String =
         req.getHeader(name) ?: defaultValue

@@ -2,8 +2,6 @@ package com.back.boundedContexts.post.dto
 
 import com.back.boundedContexts.post.domain.Post
 import com.fasterxml.jackson.annotation.JsonCreator
-import com.querydsl.core.types.Projections.constructor
-import org.springframework.data.jpa.domain.AbstractPersistable_.id
 import java.time.Instant
 
 data class PostWithContentDto @JsonCreator constructor(
@@ -14,7 +12,9 @@ data class PostWithContentDto @JsonCreator constructor(
     val authorName: String,
     val authorProfileImgUrl: String,
     val title: String,
-    val content: String
+    val content: String,
+    val published: Boolean,
+    val listed: Boolean,
 ) {
     constructor(post: Post) : this(
         id = post.id,
@@ -24,6 +24,8 @@ data class PostWithContentDto @JsonCreator constructor(
         authorName = post.author.name,
         authorProfileImgUrl = post.author.redirectToProfileImgUrlOrDefault,
         title = post.title,
-        content = post.content
+        content = post.content,
+        published = post.published,
+        listed = post.listed,
     )
 }

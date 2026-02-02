@@ -24,8 +24,20 @@ class PostFacade(
 ) {
     fun count(): Long = postRepository.count()
 
-    fun write(author: Member, title: String, content: String): Post {
-        val post = Post(author, title, content)
+    fun write(
+        author: Member,
+        title: String,
+        content: String,
+        published: Boolean = false,
+        listed: Boolean = false,
+    ): Post {
+        val post = Post(
+            author = author,
+            title = title,
+            content = content,
+            published = published,
+            listed = listed,
+        )
 
         author.incrementPostsCount()
 
@@ -34,8 +46,43 @@ class PostFacade(
 
     fun findById(id: Int): Post? = postRepository.findById(id).getOrNull()
 
-    fun modify(post: Post, title: String, content: String) =
-        post.modify(title, content)
+    fun modify(
+        post: Post,
+        title: String,
+        content: String,
+        published: Boolean? = null,
+        listed: Boolean? = null,
+    ) = post.modify(title, content, published, listed)
+
+    fun findPagedByAuthor(
+        author: Member,
+        page: Int,
+        pageSize: Int,
+    ): Page<Post> = postRepository.findByAuthorOrderByIdDesc(
+        author,
+        PageRequest.of(page - 1, pageSize)
+    )
+
+    /**
+     * 임시저장 글 조회 또는 생성
+     * @return Pair(Post, isNew) - 기존 글이면 false, 새로 생성이면 true
+     */
+    fun getOrCreateTemp(author: Member): Pair<Post, Boolean> {
+        val existingTemp = postRepository.findFirstByAuthorAndPublishedFalseOrderByIdDesc(author)
+        if (existingTemp != null) {
+            return existingTemp to false
+        }
+
+        val newPost = Post(
+            author = author,
+            title = "",
+            content = "",
+            published = false,
+            listed = false,
+        )
+        author.incrementPostsCount()
+        return postRepository.save(newPost) to true
+    }
 
     fun writeComment(author: Member, post: Post, content: String): PostComment {
         val postComment = post.addComment(author, content)

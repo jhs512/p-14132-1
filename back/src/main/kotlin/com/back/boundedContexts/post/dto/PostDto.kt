@@ -11,15 +11,19 @@ data class PostDto @JsonCreator constructor(
     val authorId: Int,
     val authorName: String,
     val authorProfileImgUrl: String,
-    val title: String
+    val title: String,
+    val published: Boolean,
+    val listed: Boolean,
 ) {
     constructor(post: Post) : this(
-        post.id,
-        post.createdAt,
-        post.modifiedAt,
-        post.author.id,
-        post.author.name,
-        post.author.redirectToProfileImgUrlOrDefault,
-        post.title
+        id = post.id,
+        createdAt = post.createdAt,
+        modifiedAt = post.modifiedAt,
+        authorId = post.author.id,
+        authorName = post.author.name,
+        authorProfileImgUrl = post.author.redirectToProfileImgUrlOrDefault,
+        title = post.title,
+        published = post.published,
+        listed = post.listed,
     )
 }

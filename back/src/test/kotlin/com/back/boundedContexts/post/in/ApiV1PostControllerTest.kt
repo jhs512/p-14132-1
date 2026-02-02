@@ -72,6 +72,8 @@ class ApiV1PostControllerTest {
             .andExpect(jsonPath("$.data.authorId").value(post.author.id))
             .andExpect(jsonPath("$.data.authorName").value(post.author.name))
             .andExpect(jsonPath("$.data.title").value("제목"))
+            .andExpect(jsonPath("$.data.published").value(false))
+            .andExpect(jsonPath("$.data.listed").value(false))
     }
 
     @Test
@@ -410,6 +412,8 @@ class ApiV1PostControllerTest {
             .andExpect(jsonPath("$.authorName").value(post.author.name))
             .andExpect(jsonPath("$.title").value(post.title))
             .andExpect(jsonPath("$.content").value(post.content))
+            .andExpect(jsonPath("$.published").value(post.published))
+            .andExpect(jsonPath("$.listed").value(post.listed))
     }
 
     @Test
@@ -473,5 +477,108 @@ class ApiV1PostControllerTest {
                 .andExpect(jsonPath("$.content[%d].authorName".format(i)).value(post.author.name))
                 .andExpect(jsonPath("$.content[%d].title".format(i)).value(post.title))
         }
+    }
+
+    @Test
+    @DisplayName("내 게시물 목록 조회")
+    @WithUserDetails("user1")
+    fun t16() {
+        val resultActions = mvc
+            .perform(
+                get("/post/api/v1/posts/mine?page=1&pageSize=10")
+            )
+            .andDo(print())
+
+        resultActions
+            .andExpect(handler().handlerType(ApiV1PostController::class.java))
+            .andExpect(handler().methodName("getMine"))
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.content").isArray)
+    }
+
+    @Test
+    @DisplayName("임시저장 생성")
+    @WithUserDetails("user1")
+    fun t17() {
+        val resultActions = mvc
+            .perform(
+                post("/post/api/v1/posts/temp")
+            )
+            .andDo(print())
+
+        resultActions
+            .andExpect(handler().handlerType(ApiV1PostController::class.java))
+            .andExpect(handler().methodName("getOrCreateTemp"))
+            .andExpect(status().isCreated)
+            .andExpect(jsonPath("$.resultCode").value("201-1"))
+            .andExpect(jsonPath("$.data.published").value(false))
+            .andExpect(jsonPath("$.data.listed").value(false))
+    }
+
+    @Test
+    @DisplayName("글 작성 with published=true")
+    @WithUserDetails("user1")
+    fun t18() {
+        val resultActions = mvc
+            .perform(
+                post("/post/api/v1/posts")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(
+                        """
+                            {
+                                "title": "공개 글",
+                                "content": "내용",
+                                "published": true,
+                                "listed": true
+                            }
+                            """
+                    )
+            )
+            .andDo(print())
+
+        resultActions
+            .andExpect(handler().handlerType(ApiV1PostController::class.java))
+            .andExpect(handler().methodName("write"))
+            .andExpect(status().isCreated)
+            .andExpect(jsonPath("$.data.published").value(true))
+            .andExpect(jsonPath("$.data.listed").value(true))
+    }
+
+    @Test
+    @DisplayName("미공개 글 조회 - 작성자는 조회 가능")
+    @WithUserDetails("user1")
+    fun t19() {
+        // user1이 미공개 글 작성
+        val actor = actorFacade.findByUsername("user1").getOrThrow()
+        val post = postFacade.write(actor, "미공개 글", "내용", published = false, listed = false)
+
+        val resultActions = mvc
+            .perform(
+                get("/post/api/v1/posts/${post.id}")
+            )
+            .andDo(print())
+
+        resultActions
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.published").value(false))
+    }
+
+    @Test
+    @DisplayName("미공개 글 조회 - 다른 사용자는 조회 불가")
+    @WithUserDetails("user3")
+    fun t20() {
+        // user1이 미공개 글 작성
+        val actor = actorFacade.findByUsername("user1").getOrThrow()
+        val post = postFacade.write(actor, "미공개 글", "내용", published = false, listed = false)
+
+        val resultActions = mvc
+            .perform(
+                get("/post/api/v1/posts/${post.id}")
+            )
+            .andDo(print())
+
+        resultActions
+            .andExpect(status().isForbidden)
+            .andExpect(jsonPath("$.resultCode").value("403-3"))
     }
 }

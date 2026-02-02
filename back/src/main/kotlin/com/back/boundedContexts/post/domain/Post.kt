@@ -16,7 +16,9 @@ class Post(
     @field:ManyToOne(fetch = LAZY)
     val author: Member,
     var title: String,
-    content: String
+    content: String,
+    var published: Boolean = false,
+    var listed: Boolean = false,
 ) : BaseTime() {
     @OneToOne(fetch = LAZY, cascade = [PERSIST, REMOVE])
     var body: PostBody = PostBody(content)
@@ -37,9 +39,25 @@ class Post(
             }
         }
 
-    fun modify(title: String, content: String) {
+    // 상태 확인 속성
+    val isTemp: Boolean get() = !published
+    val isPrivate: Boolean get() = published && !listed
+
+    fun modify(title: String, content: String, published: Boolean? = null, listed: Boolean? = null) {
         this.title = title
         this.content = content
+        published?.let { this.published = it }
+        listed?.let { this.listed = it }
+    }
+
+    // 읽기 권한 확인: 미공개 글은 작성자나 관리자만 볼 수 있음
+    fun canRead(actor: Member?): Boolean {
+        if (!published) return actor?.id == author.id || actor?.isAdmin == true
+        return true
+    }
+
+    fun checkActorCanRead(actor: Member?) {
+        if (!canRead(actor)) throw BusinessException("403-3", "${id}번 글 조회권한이 없습니다.")
     }
 
     fun addComment(author: Member, content: String): PostComment {
