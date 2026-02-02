@@ -376,44 +376,143 @@ ALTER TABLE post ADD CONSTRAINT fk_post_thumbnail
 
 ## 9. 구현 단계
 
-### Phase 1: 게시물 상태 관리 (1-2일)
+### Phase 0: 기존 코드 리팩토링
+1. PostBody 엔티티 제거 → Post에 content 직접 포함
+2. DTO 상속 구조 도입
+3. Facade 권한 검증 통합
+4. @Transactional 명시화
+
+### Phase 1: 게시물 상태 관리
 1. Post 엔티티에 published/listed 필드 추가
 2. 임시저장 API 구현
 3. 내 게시물 목록 API 구현
 4. 프론트엔드 수정
 
-### Phase 2: 파일 관리 시스템 (2-3일)
+### Phase 2: 파일 관리 시스템
 1. PostGenFile 엔티티 생성
 2. 파일 업로드/다운로드 API 구현
 3. 정적 파일 서빙 설정
 4. 프론트엔드 파일 관리 UI
 
-### Phase 3: 프레젠테이션/Raw 모드 (1-2일)
+### Phase 3: 프레젠테이션/Raw 모드
 1. PPT 데이터 API 구현
 2. Marp 프론트엔드 통합
 3. Raw 콘텐츠 뷰 구현
 
 ---
 
-## 10. 테스트 계획
+## 10. 기존 코드 리팩토링
 
-### 10.1 단위 테스트
+새 기능 구현과 함께 기존 코드의 문제점을 개선한다.
+
+### 10.1 개선할 문제점
+
+| 우선순위 | 문제점 | 개선 방향 |
+|---------|--------|----------|
+| 🔴 High | PostBody 불필요한 엔티티화 | Post에 content를 `@Lob`으로 직접 포함 |
+| 🔴 High | 권한 검증 위치 비일관성 | Facade에서 통합 처리 |
+| 🟠 Medium | DTO 코드 중복 | 상속 구조 도입 |
+| 🟠 Medium | 트랜잭션 경계 불명확 | Facade에 `@Transactional` 명시 |
+
+### 10.2 PostBody 제거
+
+**현재 (문제):**
+```kotlin
+@Entity
+class Post(...) {
+    @OneToOne(fetch = LAZY, cascade = [PERSIST, REMOVE])
+    var body: PostBody = PostBody(content)  // 불필요한 JOIN 발생
+}
+```
+
+**개선 후:**
+```kotlin
+@Entity
+class Post(
+    @field:ManyToOne(fetch = LAZY)
+    val author: Member,
+    var title: String,
+    @field:Lob
+    var content: String,
+    var published: Boolean = false,
+    var listed: Boolean = false,
+) : BaseTime()
+```
+
+### 10.3 DTO 상속 구조
+
+**현재 (중복):**
+```kotlin
+data class PostDto(id, createdAt, modifiedAt, authorId, authorName, title)
+data class PostWithContentDto(id, createdAt, modifiedAt, authorId, authorName, title, content)  // 중복
+```
+
+**개선 후:**
+```kotlin
+open class PostDto(
+    val id: Int,
+    val createdAt: Instant,
+    val modifiedAt: Instant,
+    val authorId: Int,
+    val authorName: String,
+    val authorProfileImgUrl: String,
+    val title: String,
+    val published: Boolean,
+    val listed: Boolean,
+)
+
+class PostWithContentDto(
+    id: Int, createdAt: Instant, modifiedAt: Instant,
+    authorId: Int, authorName: String, authorProfileImgUrl: String,
+    title: String, published: Boolean, listed: Boolean,
+    val content: String,
+) : PostDto(id, createdAt, modifiedAt, authorId, authorName, authorProfileImgUrl, title, published, listed)
+```
+
+### 10.4 권한 검증 통합
+
+**현재 (분산):**
+```kotlin
+// Controller에서
+post.checkActorCanDelete(actor)
+postFacade.delete(post)
+```
+
+**개선 후:**
+```kotlin
+// Facade에서 통합
+@Transactional
+fun delete(actor: Member, post: Post) {
+    post.checkActorCanDelete(actor)
+    post.author.decrementPostsCount()
+    postRepository.delete(post)
+}
+
+// Controller는 단순 호출
+postFacade.delete(actor, post)
+```
+
+---
+
+## 11. 테스트 계획
+
+### 11.1 단위 테스트
 - PostGenFile 도메인 로직
 - 파일 타입 감지
 - 접근 권한 확인
 
-### 10.2 통합 테스트
+### 11.2 통합 테스트
 - 파일 업로드/다운로드 플로우
 - 게시물 상태 변경 플로우
 - 권한 기반 접근 제어
 
-### 10.3 E2E 테스트
+### 11.3 E2E 테스트
 - 게시물 작성 → 파일 첨부 → 발행 플로우
 - PPT 모드 렌더링
 
 ---
 
-## 11. 참고 자료
+## 12. 참고 자료
 
 - [SLOG GitHub Repository](https://github.com/jhs512/slog_2025_04)
 - [현재 프로젝트 MPM 아키텍처](./1-MPM.md)
