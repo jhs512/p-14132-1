@@ -29,6 +29,14 @@ class ApiV1PostController(
     val actor
         get() = rq.actor
 
+    private fun makePostWithContentDto(post: com.back.boundedContexts.post.domain.Post): PostWithContentDto {
+        val actor = rq.actorOrNull
+        return PostWithContentDto(post).apply {
+            actorCanModify = post.getCheckActorCanModifyRs(actor).isSuccess
+            actorCanDelete = post.getCheckActorCanDeleteRs(actor).isSuccess
+        }
+    }
+
     @GetMapping
     @Transactional(readOnly = true)
     @Operation(summary = "다건 조회")
@@ -74,7 +82,7 @@ class ApiV1PostController(
         // 미공개 글은 작성자/관리자만 조회 가능
         post.checkActorCanRead(rq.actorOrNull)
 
-        return PostWithContentDto(post)
+        return makePostWithContentDto(post)
     }
 
     @DeleteMapping("/{id}")
@@ -85,7 +93,7 @@ class ApiV1PostController(
     ): RsData<Void> {
         val post = postFacade.findById(id).getOrThrow()
 
-        post.checkActorCanDelete(actor)
+        post.checkActorCanDelete(rq.actorOrNull)
 
         postFacade.delete(post)
 
@@ -100,7 +108,7 @@ class ApiV1PostController(
         @field:Size(min = 2, max = 100)
         val title: String,
         @field:NotBlank
-        @field:Size(min = 2, max = 5000)
+        @field:Size(min = 2)
         val content: String,
         val published: Boolean?,
         val listed: Boolean?,
@@ -128,11 +136,8 @@ class ApiV1PostController(
     }
 
     data class PostModifyReqBody(
-        @field:NotBlank
-        @field:Size(min = 2, max = 100)
+        @field:Size(max = 100)
         val title: String,
-        @field:NotBlank
-        @field:Size(min = 2, max = 5000)
         val content: String,
         val published: Boolean? = null,
         val listed: Boolean? = null,
@@ -147,7 +152,7 @@ class ApiV1PostController(
     ): RsData<PostDto> {
         val post = postFacade.findById(id).getOrThrow()
 
-        post.checkActorCanModify(actor)
+        post.checkActorCanModify(rq.actorOrNull)
 
         postFacade.modify(
             post = post,
@@ -190,9 +195,9 @@ class ApiV1PostController(
         val (post, isNew) = postFacade.getOrCreateTemp(actor)
 
         return if (isNew) {
-            RsData("201-1", "임시저장 글이 생성되었습니다.", PostWithContentDto(post))
+            RsData("201-1", "임시저장 글이 생성되었습니다.", makePostWithContentDto(post))
         } else {
-            RsData("200-1", "기존 임시저장 글을 반환합니다.", PostWithContentDto(post))
+            RsData("200-1", "기존 임시저장 글을 반환합니다.", makePostWithContentDto(post))
         }
     }
 }

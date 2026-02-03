@@ -4,7 +4,7 @@ import com.back.boundedContexts.post.domain.Post
 import com.fasterxml.jackson.annotation.JsonCreator
 import java.time.Instant
 
-data class PostWithContentDto @JsonCreator constructor(
+data class PostWithContentDto(
     val id: Int,
     val createdAt: Instant,
     val modifiedAt: Instant,
@@ -15,6 +15,8 @@ data class PostWithContentDto @JsonCreator constructor(
     val content: String,
     val published: Boolean,
     val listed: Boolean,
+    var actorCanModify: Boolean = false,
+    var actorCanDelete: Boolean = false,
 ) {
     constructor(post: Post) : this(
         id = post.id,

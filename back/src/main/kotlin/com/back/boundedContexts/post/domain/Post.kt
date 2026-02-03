@@ -1,6 +1,7 @@
 package com.back.boundedContexts.post.domain
 
 import com.back.boundedContexts.member.domain.shared.Member
+import com.back.global.dto.RsData
 import com.back.global.exception.app.BusinessException
 import com.back.global.jpa.domain.BaseTime
 import jakarta.persistence.CascadeType.PERSIST
@@ -29,6 +30,16 @@ class Post(
         orphanRemoval = true
     )
     val comments: MutableList<PostComment> = mutableListOf()
+
+    @OneToMany(
+        mappedBy = "post",
+        cascade = [PERSIST, REMOVE],
+        orphanRemoval = true
+    )
+    val genFiles: MutableList<PostGenFile> = mutableListOf()
+
+    @field:ManyToOne(fetch = LAZY)
+    var thumbnailGenFile: PostGenFile? = null
 
     var content: String
         get() = body.content
@@ -77,11 +88,49 @@ class Post(
         return comments.remove(postComment)
     }
 
-    fun checkActorCanModify(actor: Member) {
-        if (author != actor) throw BusinessException("403-1", "${id}번 글 수정권한이 없습니다.")
+    // 수정 권한 체크 (RsData 반환)
+    fun getCheckActorCanModifyRs(actor: Member?): RsData<Unit> {
+        if (actor == null) return RsData.fail("401-1", "로그인 후 이용해주세요.")
+        if (actor == author) return RsData.OK
+        return RsData.fail("403-1", "작성자만 글을 수정할 수 있습니다.")
     }
 
-    fun checkActorCanDelete(actor: Member) {
-        if (author != actor) throw BusinessException("403-2", "${id}번 글 삭제권한이 없습니다.")
+    fun checkActorCanModify(actor: Member?) {
+        val rs = getCheckActorCanModifyRs(actor)
+        if (rs.isFail) throw BusinessException(rs.resultCode, rs.msg)
     }
+
+    // 삭제 권한 체크 (RsData 반환) - 관리자도 삭제 가능
+    fun getCheckActorCanDeleteRs(actor: Member?): RsData<Unit> {
+        if (actor == null) return RsData.fail("401-1", "로그인 후 이용해주세요.")
+        if (actor.isAdmin) return RsData.OK
+        if (actor == author) return RsData.OK
+        return RsData.fail("403-2", "작성자만 글을 삭제할 수 있습니다.")
+    }
+
+    fun checkActorCanDelete(actor: Member?) {
+        val rs = getCheckActorCanDeleteRs(actor)
+        if (rs.isFail) throw BusinessException(rs.resultCode, rs.msg)
+    }
+
+    // 파일 관리
+    fun addGenFile(genFile: PostGenFile) {
+        genFiles.add(genFile)
+    }
+
+    fun findGenFile(typeCode: PostGenFile.TypeCode, fileNo: Int): PostGenFile? =
+        genFiles.find { it.typeCode == typeCode && it.fileNo == fileNo }
+
+    fun findGenFileById(id: Int): PostGenFile? =
+        genFiles.find { it.id == id }
+
+    fun deleteGenFile(genFile: PostGenFile): Boolean {
+        if (thumbnailGenFile?.id == genFile.id) {
+            thumbnailGenFile = null
+        }
+        return genFiles.remove(genFile)
+    }
+
+    fun getNextFileNo(typeCode: PostGenFile.TypeCode): Int =
+        genFiles.filter { it.typeCode == typeCode }.maxOfOrNull { it.fileNo }?.plus(1) ?: 1
 }

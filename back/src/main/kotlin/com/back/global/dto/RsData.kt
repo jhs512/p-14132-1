@@ -14,4 +14,20 @@ data class RsData<T>(
         msg,
         data
     )
+
+    @get:JsonIgnore
+    val isSuccess: Boolean
+        get() = statusCode in 200..399
+
+    @get:JsonIgnore
+    val isFail: Boolean
+        get() = !isSuccess
+
+    companion object {
+        val OK: RsData<Unit> = RsData("200-1", "성공", Unit)
+
+        fun <T> ok(data: T): RsData<T> = RsData("200-1", "성공", data)
+
+        fun <T> fail(resultCode: String, msg: String): RsData<T> = RsData(resultCode, msg)
+    }
 }

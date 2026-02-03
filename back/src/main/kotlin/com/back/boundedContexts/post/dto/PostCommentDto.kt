@@ -1,10 +1,9 @@
 package com.back.boundedContexts.post.dto
 
 import com.back.boundedContexts.post.domain.PostComment
-import com.fasterxml.jackson.annotation.JsonCreator
 import java.time.Instant
 
-data class PostCommentDto @JsonCreator constructor(
+data class PostCommentDto(
     val id: Int,
     val createdAt: Instant,
     val modifiedAt: Instant,
@@ -12,7 +11,9 @@ data class PostCommentDto @JsonCreator constructor(
     val authorName: String,
     val authorProfileImgUrl: String,
     val postId: Int,
-    val content: String
+    val content: String,
+    var actorCanModify: Boolean = false,
+    var actorCanDelete: Boolean = false,
 ) {
     constructor(postComment: PostComment) : this(
         postComment.id,

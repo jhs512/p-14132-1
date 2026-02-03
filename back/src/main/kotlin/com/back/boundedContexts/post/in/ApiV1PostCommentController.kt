@@ -25,6 +25,14 @@ class ApiV1PostCommentController(
     val actor
         get() = rq.actor
 
+    private fun makePostCommentDto(postComment: com.back.boundedContexts.post.domain.PostComment): PostCommentDto {
+        val actor = rq.actorOrNull
+        return PostCommentDto(postComment).apply {
+            actorCanModify = postComment.getCheckActorCanModifyRs(actor).isSuccess
+            actorCanDelete = postComment.getCheckActorCanDeleteRs(actor).isSuccess
+        }
+    }
+
     @GetMapping
     @Transactional(readOnly = true)
     @Operation(summary = "다건 조회")
@@ -35,7 +43,8 @@ class ApiV1PostCommentController(
 
         return post
             .comments
-            .map { PostCommentDto(it) }
+            .sortedByDescending { it.id }
+            .map { makePostCommentDto(it) }
     }
 
     @GetMapping("/{id}")
@@ -49,7 +58,7 @@ class ApiV1PostCommentController(
 
         val postComment = post.findCommentById(id).getOrThrow()
 
-        return PostCommentDto(postComment)
+        return makePostCommentDto(postComment)
     }
 
     @DeleteMapping("/{id}")
@@ -63,7 +72,7 @@ class ApiV1PostCommentController(
 
         val postComment = post.findCommentById(id).getOrThrow()
 
-        postComment.checkActorCanDelete(actor)
+        postComment.checkActorCanDelete(rq.actorOrNull)
 
         postFacade.deleteComment(post, postComment)
 
@@ -91,7 +100,7 @@ class ApiV1PostCommentController(
 
         val postComment = post.findCommentById(id).getOrThrow()
 
-        postComment.checkActorCanModify(actor)
+        postComment.checkActorCanModify(rq.actorOrNull)
 
         postFacade.modifyComment(postComment, reqBody.content)
 
@@ -121,7 +130,7 @@ class ApiV1PostCommentController(
         return RsData(
             "201-1",
             "${postComment.id}번 댓글이 작성되었습니다.",
-            PostCommentDto(postComment)
+            makePostCommentDto(postComment)
         )
     }
 }
