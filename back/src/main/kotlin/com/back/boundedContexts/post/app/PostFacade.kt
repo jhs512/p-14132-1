@@ -7,6 +7,7 @@ import com.back.boundedContexts.post.domain.PostComment
 import com.back.boundedContexts.post.dto.PostCommentDto
 import com.back.boundedContexts.post.dto.PostDto
 import com.back.boundedContexts.post.event.PostCommentWrittenEvent
+import com.back.boundedContexts.post.out.PostLikeRepository
 import com.back.boundedContexts.post.out.PostRepository
 import com.back.global.event.app.EventPublisher
 import com.back.standard.dto.post.type1.PostSearchKeywordType1
@@ -20,7 +21,9 @@ import kotlin.jvm.optionals.getOrNull
 @Service
 class PostFacade(
     private val postRepository: PostRepository,
+    private val postLikeRepository: PostLikeRepository,
     private val eventPublisher: EventPublisher,
+    private val postNotificationService: PostNotificationService,
 ) {
     fun count(): Long = postRepository.count()
 
@@ -52,7 +55,25 @@ class PostFacade(
         content: String,
         published: Boolean? = null,
         listed: Boolean? = null,
-    ) = post.modify(title, content, published, listed)
+    ) {
+        // 공개 시 제목/내용 필수 검증
+        val willPublish = published ?: post.published
+        if (willPublish) {
+            require(title.isNotBlank()) { "공개 글의 제목은 필수입니다." }
+            require(title.length >= 2) { "공개 글의 제목은 2자 이상이어야 합니다." }
+            require(content.isNotBlank()) { "공개 글의 내용은 필수입니다." }
+            require(content.length >= 2) { "공개 글의 내용은 2자 이상이어야 합니다." }
+        }
+
+        val wasPublishedAndListed = post.published && post.listed
+        post.modify(title, content, published, listed)
+        val isNowPublishedAndListed = post.published && post.listed
+
+        // 처음 공개될 때만 알림
+        if (!wasPublishedAndListed && isNowPublishedAndListed) {
+            postNotificationService.notifyNewPost(post)
+        }
+    }
 
     fun findPagedByAuthor(
         author: Member,
@@ -101,7 +122,7 @@ class PostFacade(
         return postComment
     }
 
-    fun deleteComment(post: Post, postComment: PostComment): Boolean =
+    fun deleteComment(post: Post, postComment: PostComment) =
         post.deleteComment(postComment)
 
     fun modifyComment(postComment: PostComment, content: String) {
@@ -132,4 +153,16 @@ class PostFacade(
                 sort.sortBy
             )
         )
+
+    /**
+     * 사용자가 좋아요한 글 ID Set 조회 (IN 쿼리 사용)
+     */
+    fun findLikedPostIds(liker: Member?, posts: List<Post>): Set<Int> {
+        if (liker == null || posts.isEmpty()) return emptySet()
+
+        return postLikeRepository
+            .findByLikerAndPostIn(liker, posts)
+            .map { it.post.id }
+            .toSet()
+    }
 }

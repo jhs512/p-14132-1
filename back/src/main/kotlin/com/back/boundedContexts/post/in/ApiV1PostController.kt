@@ -2,6 +2,7 @@ package com.back.boundedContexts.post.`in`
 
 import PageDto
 import com.back.boundedContexts.post.app.PostFacade
+import com.back.boundedContexts.post.domain.Post
 import com.back.boundedContexts.post.dto.PostDto
 import com.back.boundedContexts.post.dto.PostWithContentDto
 import com.back.global.dto.RsData
@@ -15,8 +16,11 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Size
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.*
+import java.time.Instant
 
 @RestController
 @RequestMapping("/post/api/v1/posts")
@@ -29,9 +33,11 @@ class ApiV1PostController(
     val actor
         get() = rq.actor
 
-    private fun makePostWithContentDto(post: com.back.boundedContexts.post.domain.Post): PostWithContentDto {
+    private fun makePostWithContentDto(post: Post): PostWithContentDto {
         val actor = rq.actorOrNull
+
         return PostWithContentDto(post).apply {
+            actorHasLiked = post.isLikedBy(actor)
             actorCanModify = post.getCheckActorCanModifyRs(actor).isSuccess
             actorCanDelete = post.getCheckActorCanDeleteRs(actor).isSuccess
         }
@@ -56,7 +62,7 @@ class ApiV1PostController(
         val pageSize: Int = if (pageSize in 1..30) {
             pageSize
         } else {
-            5
+            30
         }
 
         val postPage = postFacade.findPagedByKw(
@@ -67,22 +73,61 @@ class ApiV1PostController(
             pageSize
         )
 
+        val actor = rq.actorOrNull
+        val likedPostIds = postFacade.findLikedPostIds(actor, postPage.content)
+
         return PageDto(
             postPage
-                .map { post -> PostDto(post) }
+                .map {
+                    PostDto(it).apply {
+                        actorHasLiked = it.id in likedPostIds
+                    }
+                }
         )
     }
 
     @GetMapping("/{id}")
     @Transactional(readOnly = true)
     @Operation(summary = "단건 조회")
-    fun getItem(@PathVariable id: Int): PostWithContentDto {
+    fun getItem(
+        @PathVariable id: Int,
+        @RequestParam(required = false) lastModifyDateAfter: Instant?
+    ): ResponseEntity<PostWithContentDto> {
         val post = postFacade.findById(id).getOrThrow()
 
-        // 미공개 글은 작성자/관리자만 조회 가능
-        post.checkActorCanRead(rq.actorOrNull)
+        rq.actorOrNull?.let {
+            post.checkActorCanRead(it)
+        }
 
-        return makePostWithContentDto(post)
+        // 라이브 리로드: lastModifyDateAfter 이후 수정되지 않았으면 412 반환
+        if (lastModifyDateAfter != null && !post.modifiedAt.isAfter(lastModifyDateAfter)) {
+            return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).build()
+        }
+
+        return ResponseEntity.ok(makePostWithContentDto(post))
+    }
+
+    data class PostHitResBody(
+        val hitCount: Int,
+    )
+
+    @PostMapping("/{id}/hit")
+    @Transactional
+    @Operation(summary = "조회수 증가", description = "클라이언트에서 호출. 24시간 내 동일 글 재조회 시 증가하지 않음")
+    fun incrementHit(
+        @PathVariable id: Int
+    ): RsData<PostHitResBody> {
+        val post = postFacade.findById(id).getOrThrow()
+
+        // 이미 조회한 글이면 조회수 증가하지 않음
+        if (rq.hasViewedPost(id)) {
+            return RsData("200-2", "이미 조회한 글입니다.", PostHitResBody(post.hitCount))
+        }
+
+        post.incrementHitCount()
+        rq.markPostAsViewed(id)
+
+        return RsData("200-1", "조회수가 증가했습니다.", PostHitResBody(post.hitCount))
     }
 
     @DeleteMapping("/{id}")
@@ -185,7 +230,15 @@ class ApiV1PostController(
             pageSize = validPageSize,
         )
 
-        return PageDto(postPage.map { PostDto(it) })
+        val likedPostIds = postFacade.findLikedPostIds(actor, postPage.content)
+
+        return PageDto(
+            postPage.map { post ->
+                PostDto(post).apply {
+                    actorHasLiked = post.id in likedPostIds
+                }
+            }
+        )
     }
 
     @PostMapping("/temp")
@@ -199,5 +252,29 @@ class ApiV1PostController(
         } else {
             RsData("200-1", "기존 임시저장 글을 반환합니다.", makePostWithContentDto(post))
         }
+    }
+
+    data class PostLikeToggleResBody(
+        val liked: Boolean,
+        val likesCount: Int,
+    )
+
+    @PostMapping("/{id}/like")
+    @Transactional
+    @Operation(summary = "좋아요 토글")
+    fun toggleLike(
+        @PathVariable id: Int
+    ): RsData<PostLikeToggleResBody> {
+        val post = postFacade.findById(id).getOrThrow()
+
+        val liked = post.toggleLike(actor)
+
+        val msg = if (liked) "좋아요를 눌렀습니다." else "좋아요를 취소했습니다."
+
+        return RsData(
+            "200-1",
+            msg,
+            PostLikeToggleResBody(liked, post.likesCount)
+        )
     }
 }

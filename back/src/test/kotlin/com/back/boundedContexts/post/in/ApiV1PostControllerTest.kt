@@ -197,7 +197,7 @@ class ApiV1PostControllerTest {
                 jsonPath("$.msg").value(
                     """
                         content-NotBlank-must not be blank
-                        content-Size-size must be between 2 and 5000
+                        content-Size-size must be between 2 and 2147483647
                         """.trimIndent()
                 )
             )
@@ -337,7 +337,7 @@ class ApiV1PostControllerTest {
             .andExpect(handler().methodName("modify"))
             .andExpect(status().isForbidden)
             .andExpect(jsonPath("$.resultCode").value("403-1"))
-            .andExpect(jsonPath("$.msg").value("%d번 글 수정권한이 없습니다.".format(id)))
+            .andExpect(jsonPath("$.msg").value("작성자만 글을 수정할 수 있습니다."))
     }
 
 
@@ -378,7 +378,7 @@ class ApiV1PostControllerTest {
             .andExpect(handler().methodName("delete"))
             .andExpect(status().isForbidden)
             .andExpect(jsonPath("$.resultCode").value("403-2"))
-            .andExpect(jsonPath("$.msg").value("%d번 글 삭제권한이 없습니다.".format(id)))
+            .andExpect(jsonPath("$.msg").value("작성자만 글을 삭제할 수 있습니다."))
     }
 
 

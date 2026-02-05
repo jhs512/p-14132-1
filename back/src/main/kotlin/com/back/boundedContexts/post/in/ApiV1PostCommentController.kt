@@ -42,8 +42,7 @@ class ApiV1PostCommentController(
         val post = postFacade.findById(postId).getOrThrow()
 
         return post
-            .comments
-            .sortedByDescending { it.id }
+            .getComments()
             .map { makePostCommentDto(it) }
     }
 

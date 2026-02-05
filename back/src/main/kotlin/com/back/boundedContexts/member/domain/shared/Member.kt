@@ -124,3 +124,4 @@ class Member(
     val authorities: Collection<GrantedAuthority>
         get() = authoritiesAsStringList.map { SimpleGrantedAuthority(it) }
 }
+

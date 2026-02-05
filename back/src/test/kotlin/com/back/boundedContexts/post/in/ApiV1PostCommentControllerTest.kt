@@ -75,7 +75,7 @@ class ApiV1PostCommentControllerTest {
             .andDo(print())
 
         val post = postFacade.findById(postId).getOrThrow()
-        val comments = post.comments
+        val comments = post.getComments() // 이미 id desc 정렬됨
 
         resultActions
             .andExpect(handler().handlerType(ApiV1PostCommentController::class.java))
@@ -148,7 +148,7 @@ class ApiV1PostCommentControllerTest {
             .andExpect(handler().methodName("delete"))
             .andExpect(status().isForbidden)
             .andExpect(jsonPath("$.resultCode").value("403-2"))
-            .andExpect(jsonPath("$.msg").value("${id}번 댓글 삭제권한이 없습니다."))
+            .andExpect(jsonPath("$.msg").value("작성자만 댓글을 삭제할 수 있습니다."))
     }
 
     @Test
@@ -206,7 +206,7 @@ class ApiV1PostCommentControllerTest {
             .andExpect(handler().methodName("modify"))
             .andExpect(status().isForbidden)
             .andExpect(jsonPath("$.resultCode").value("403-1"))
-            .andExpect(jsonPath("$.msg").value("${id}번 댓글 수정권한이 없습니다."))
+            .andExpect(jsonPath("$.msg").value("작성자만 댓글을 수정할 수 있습니다."))
     }
 
     @Test
@@ -230,7 +230,7 @@ class ApiV1PostCommentControllerTest {
             .andDo(print())
 
         val post = postFacade.findById(postId).getOrThrow()
-        val postComment = post.comments.last()
+        val postComment = post.getComments().first() // id desc라 first가 가장 새로운 것
 
         resultActions
             .andExpect(handler().handlerType(ApiV1PostCommentController::class.java))

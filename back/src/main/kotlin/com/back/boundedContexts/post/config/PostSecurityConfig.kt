@@ -10,8 +10,12 @@ class PostSecurityConfig {
         authorize.apply {
             authorize(HttpMethod.GET, "/post/api/*/posts", permitAll)
             authorize(HttpMethod.GET, "/post/api/*/posts/{id:\\d+}", permitAll)
+            authorize(HttpMethod.POST, "/post/api/*/posts/{id:\\d+}/hit", permitAll)
             authorize(HttpMethod.GET, "/post/api/*/posts/{postId:\\d+}/comments", permitAll)
             authorize(HttpMethod.GET, "/post/api/*/posts/{postId:\\d+}/comments/{id:\\d+}", permitAll)
+            authorize(HttpMethod.GET, "/post/api/*/posts/{postId:\\d+}/genFiles", permitAll)
+            authorize(HttpMethod.GET, "/post/api/*/posts/{postId:\\d+}/genFiles/{id:\\d+}", permitAll)
+            authorize(HttpMethod.GET, "/post/api/*/posts/{postId:\\d+}/genFiles/download/**", permitAll)
         }
     }
 }

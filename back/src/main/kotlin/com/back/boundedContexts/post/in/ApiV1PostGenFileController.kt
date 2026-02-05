@@ -68,21 +68,23 @@ class ApiV1PostGenFileController(
 
     @PostMapping("/{typeCode}")
     @Transactional
-    @Operation(summary = "파일 업로드")
+    @Operation(summary = "파일 업로드 (다건)")
     fun upload(
         @PathVariable postId: Int,
         @PathVariable typeCode: TypeCode,
-        @RequestParam("file") file: MultipartFile
-    ): RsData<PostGenFileDto> {
+        @RequestParam("files") files: List<MultipartFile>
+    ): RsData<List<PostGenFileDto>> {
         val post = postFacade.findById(postId).getOrThrow()
         post.checkActorCanModify(rq.actorOrNull)
 
-        val genFile = postGenFileFacade.upload(post, typeCode, file)
+        val genFiles = files
+            .filter { !it.isEmpty }
+            .map { postGenFileFacade.upload(post, typeCode, it) }
 
         return RsData(
             "201-1",
-            "파일이 업로드되었습니다.",
-            PostGenFileDto(genFile)
+            "${genFiles.size}개의 파일이 업로드되었습니다.",
+            genFiles.map { PostGenFileDto(it) }
         )
     }
 

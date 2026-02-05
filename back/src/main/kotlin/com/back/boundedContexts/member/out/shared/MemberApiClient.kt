@@ -19,6 +19,7 @@ class MemberApiClient(
                 "/member/api/v1/members/randomSecureTip",
                 authHeaders
             )
+
             return if (response.isOk) response.body else "No secure tip available"
         }
 }
