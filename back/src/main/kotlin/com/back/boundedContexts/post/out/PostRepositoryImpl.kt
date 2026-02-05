@@ -1,7 +1,10 @@
 package com.back.boundedContexts.post.out
 
+import com.back.boundedContexts.member.domain.shared.Member
 import com.back.boundedContexts.post.domain.Post
 import com.back.boundedContexts.post.domain.QPost.post
+import com.back.boundedContexts.post.domain.QPostLike.postLike
+import com.back.boundedContexts.post.dto.PostStatsDto
 import com.back.standard.dto.post.type1.PostSearchKeywordType1
 import com.back.standard.util.QueryDslUtil
 import com.querydsl.core.BooleanBuilder
@@ -55,5 +58,32 @@ class PostRepositoryImpl(
         return PageableExecutionUtils.getPage(results, pageable) {
             totalQuery.fetchFirst() ?: 0L
         }
+    }
+
+    override fun findPostStats(postId: Int, actor: Member?): PostStatsDto {
+        val foundPost = queryFactory
+            .selectFrom(post)
+            .where(post.id.eq(postId))
+            .fetchOne()
+            ?: return PostStatsDto(0, 0, false)
+
+        val actorHasLiked = if (actor != null) {
+            queryFactory
+                .selectOne()
+                .from(postLike)
+                .where(
+                    postLike.post.id.eq(postId),
+                    postLike.liker.id.eq(actor.id)
+                )
+                .fetchFirst() != null
+        } else {
+            false
+        }
+
+        return PostStatsDto(
+            likesCount = foundPost.likesCount,
+            commentsCount = foundPost.commentsCount,
+            actorHasLiked = actorHasLiked
+        )
     }
 }

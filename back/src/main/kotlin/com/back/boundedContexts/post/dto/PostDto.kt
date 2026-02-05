@@ -14,6 +14,11 @@ data class PostDto @JsonCreator constructor(
     val title: String,
     val published: Boolean,
     val listed: Boolean,
+    val thumbnailImgUrl: String,
+    val likesCount: Int,
+    val commentsCount: Int,
+    val hitCount: Int,
+    var actorHasLiked: Boolean = false,
 ) {
     constructor(post: Post) : this(
         id = post.id,
@@ -25,5 +30,9 @@ data class PostDto @JsonCreator constructor(
         title = post.title,
         published = post.published,
         listed = post.listed,
+        thumbnailImgUrl = post.thumbnailGenFile?.publicUrl ?: "",
+        likesCount = post.likesCount,
+        commentsCount = post.commentsCount,
+        hitCount = post.hitCount,
     )
 }

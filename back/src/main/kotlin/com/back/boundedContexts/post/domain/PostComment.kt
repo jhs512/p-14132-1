@@ -21,7 +21,7 @@ class PostComment(
     }
 
     // 수정 권한 체크 (RsData 반환)
-    fun getCheckActorCanModifyRs(actor: Member?): RsData<Unit> {
+    fun getCheckActorCanModifyRs(actor: Member?): RsData<Void> {
         if (actor == null) return RsData.fail("401-1", "로그인 후 이용해주세요.")
         if (actor == author) return RsData.OK
         return RsData.fail("403-1", "작성자만 댓글을 수정할 수 있습니다.")
@@ -33,7 +33,7 @@ class PostComment(
     }
 
     // 삭제 권한 체크 (RsData 반환) - 관리자도 삭제 가능
-    fun getCheckActorCanDeleteRs(actor: Member?): RsData<Unit> {
+    fun getCheckActorCanDeleteRs(actor: Member?): RsData<Void> {
         if (actor == null) return RsData.fail("401-1", "로그인 후 이용해주세요.")
         if (actor.isAdmin) return RsData.OK
         if (actor == author) return RsData.OK

@@ -15,6 +15,10 @@ data class PostWithContentDto(
     val content: String,
     val published: Boolean,
     val listed: Boolean,
+    val likesCount: Int,
+    val commentsCount: Int,
+    val hitCount: Int,
+    var actorHasLiked: Boolean = false,
     var actorCanModify: Boolean = false,
     var actorCanDelete: Boolean = false,
 ) {
@@ -29,5 +33,8 @@ data class PostWithContentDto(
         content = post.content,
         published = post.published,
         listed = post.listed,
+        likesCount = post.likesCount,
+        commentsCount = post.commentsCount,
+        hitCount = post.hitCount,
     )
 }
