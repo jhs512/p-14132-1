@@ -24,7 +24,7 @@ data class RsData<T>(
         get() = !isSuccess
 
     companion object {
-        val OK: RsData<Unit> = RsData("200-1", "성공", Unit)
+        val OK: RsData<Void> = RsData("200-1", "성공")
 
         fun <T> ok(data: T): RsData<T> = RsData("200-1", "성공", data)
 

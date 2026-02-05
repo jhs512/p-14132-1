@@ -2,6 +2,7 @@ package com.back.global.security.config
 
 import com.back.boundedContexts.member.config.MemberSecurityConfig
 import com.back.boundedContexts.post.config.PostSecurityConfig
+import com.back.global.app.config.AppConfig
 import com.back.global.dto.RsData
 import com.back.global.security.config.oauth2.CustomOAuth2AuthorizationRequestResolver
 import com.back.global.security.config.oauth2.CustomOAuth2LoginSuccessHandler
@@ -35,6 +36,8 @@ class SecurityConfig(
                 // ================================
                 authorize("/favicon.ico", permitAll)
                 authorize("/h2-console/**", permitAll)
+                authorize("/gen/**", permitAll)
+                authorize("/ws/**", permitAll)
 
                 // ================================
                 // 모듈별 설정
@@ -108,7 +111,7 @@ class SecurityConfig(
     @Bean
     fun corsConfigurationSource(): UrlBasedCorsConfigurationSource {
         val configuration = CorsConfiguration().apply {
-            allowedOrigins = listOf("https://cdpn.io", "http://localhost:3000")
+            allowedOrigins = listOf("https://cdpn.io", AppConfig.siteFrontUrl)
             allowedMethods = listOf("GET", "POST", "PUT", "PATCH", "DELETE")
             allowCredentials = true
             allowedHeaders = listOf("*")

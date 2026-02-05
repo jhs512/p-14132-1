@@ -3,6 +3,7 @@ package com.back.global.web
 import com.back.boundedContexts.member.app.shared.ActorFacade
 import com.back.boundedContexts.member.domain.shared.Member
 import com.back.boundedContexts.member.domain.shared.MemberProxy
+import com.back.global.app.config.AppConfig
 import com.back.global.security.domain.SecurityUser
 import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletRequest
@@ -44,11 +45,18 @@ class Rq(
             ?.takeIf { it.isNotBlank() }
             ?: defaultValue
 
+    private fun cookieDomain(): String {
+        val domain = AppConfig.siteCookieDomain
+
+        // localhost는 그대로, 그 외에는 앞에 . 붙여서 서브도메인도 포함
+        return if (domain == "localhost") domain else ".$domain"
+    }
+
     fun setCookie(name: String, value: String?) {
         val cookie = Cookie(name, value ?: "").apply {
             path = "/"
             isHttpOnly = true
-            domain = "localhost"
+            domain = cookieDomain()
             secure = true
             setAttribute("SameSite", "Strict")
             maxAge = if (value.isNullOrBlank()) 0 else 60 * 60 * 24 * 365
@@ -63,5 +71,36 @@ class Rq(
 
     fun sendRedirect(url: String) {
         resp.sendRedirect(url)
+    }
+
+    // 쿠키 기반 조회 중복 체크 (24시간 유지)
+    // 쿠키 구분자: 쉼표는 RFC에서 허용되지 않으므로 파이프(|) 사용
+    private val viewedPostsSeparator = "|"
+
+    fun hasViewedPost(postId: Int): Boolean {
+        val viewedPosts = getCookieValue("viewedPosts", "")
+        if (viewedPosts.isBlank()) return false
+        return viewedPosts.split(viewedPostsSeparator).contains(postId.toString())
+    }
+
+    fun markPostAsViewed(postId: Int) {
+        val viewedPosts = getCookieValue("viewedPosts", "")
+        val postIds = if (viewedPosts.isBlank()) {
+            mutableSetOf<String>()
+        } else {
+            viewedPosts.split(viewedPostsSeparator).toMutableSet()
+        }
+        postIds.add(postId.toString())
+
+        // 쿠키 크기 제한을 위해 최근 100개만 유지
+        val limitedIds = postIds.toList().takeLast(100).joinToString(viewedPostsSeparator)
+
+        // 24시간 유지 쿠키 설정
+        val cookie = Cookie("viewedPosts", limitedIds).apply {
+            path = "/"
+            isHttpOnly = true
+            maxAge = 60 * 60 * 24 // 24시간
+        }
+        resp.addCookie(cookie)
     }
 }

@@ -1,18 +1,25 @@
 package com.back.standard.lib
 
-import org.springframework.http.HttpHeaders
-import org.springframework.mock.web.MockHttpServletRequest
-import org.springframework.mock.web.MockHttpServletResponse
-import org.springframework.stereotype.Component
-import org.springframework.web.servlet.HandlerAdapter
-import org.springframework.web.servlet.HandlerMapping
+import com.back.global.security.config.CustomAuthenticationFilter
 import jakarta.servlet.http.HttpServletResponse
+import org.springframework.http.MediaType
+import org.springframework.stereotype.Component
+import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
+import org.springframework.test.web.servlet.setup.DefaultMockMvcBuilder
+import org.springframework.test.web.servlet.setup.MockMvcBuilders
+import org.springframework.web.context.WebApplicationContext
 
 @Component
 class InternalRestClient(
-    private val handlerMappings: List<HandlerMapping>,
-    private val handlerAdapters: List<HandlerAdapter>
+    webApplicationContext: WebApplicationContext,
+    customAuthenticationFilter: CustomAuthenticationFilter
 ) {
+    private val mockMvc: MockMvc = MockMvcBuilders
+        .webAppContextSetup(webApplicationContext)
+        .addFilters<DefaultMockMvcBuilder>(customAuthenticationFilter)
+        .build()
+
     fun get(uri: String, headers: Map<String, String> = emptyMap()): Response {
         return execute("GET", uri, headers)
     }
@@ -30,26 +37,23 @@ class InternalRestClient(
     }
 
     private fun execute(method: String, uri: String, headers: Map<String, String>, body: String? = null): Response {
-        val request = MockHttpServletRequest(method, uri).apply {
-            headers.forEach { (key, value) -> addHeader(key, value) }
+        val requestBuilder = when (method) {
+            "GET" -> MockMvcRequestBuilders.get(uri)
+            "POST" -> MockMvcRequestBuilders.post(uri)
+            "PUT" -> MockMvcRequestBuilders.put(uri)
+            "DELETE" -> MockMvcRequestBuilders.delete(uri)
+            else -> throw IllegalArgumentException("Unsupported method: $method")
+        }.apply {
+            headers.forEach { (key, value) -> header(key, value) }
             body?.let {
-                setContent(it.toByteArray())
-                contentType = "application/json"
+                content(it)
+                contentType(MediaType.APPLICATION_JSON)
             }
         }
-        val response = MockHttpServletResponse()
 
-        val handler = handlerMappings
-            .firstNotNullOfOrNull { it.getHandler(request) }
-            ?: return Response(HttpServletResponse.SC_NOT_FOUND, "No handler found")
+        val result = mockMvc.perform(requestBuilder).andReturn()
 
-        val adapter = handlerAdapters
-            .firstOrNull { it.supports(handler.handler!!) }
-            ?: return Response(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "No adapter found")
-
-        adapter.handle(request, response, handler.handler!!)
-
-        return Response(response.status, response.contentAsString)
+        return Response(result.response.status, result.response.contentAsString)
     }
 
     data class Response(

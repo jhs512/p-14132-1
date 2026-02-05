@@ -109,4 +109,15 @@ class GlobalExceptionHandler {
             .status(rsData.statusCode)
             .body(rsData)
     }
+
+    @ExceptionHandler(IllegalArgumentException::class)
+    fun handle(ex: IllegalArgumentException): ResponseEntity<RsData<Void>> =
+        ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body(
+                RsData(
+                    "400-1",
+                    ex.message ?: "잘못된 요청입니다."
+                )
+            )
 }
