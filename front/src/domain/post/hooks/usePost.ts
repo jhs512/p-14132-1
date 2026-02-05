@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 import type { components } from "@/global/backend/apiV1/schema";
 import client from "@/global/backend/client";
+import { toast } from "sonner";
 
 type PostWithContentDto = components["schemas"]["PostWithContentDto"];
 type RsDataVoid = components["schemas"]["RsDataVoid"];
@@ -20,7 +21,7 @@ export default function usePost(id: number) {
       })
       .then((res) => {
         if (res.error) {
-          alert(res.error.msg);
+          toast.error(res.error.msg);
           return;
         }
 
@@ -39,10 +40,11 @@ export default function usePost(id: number) {
       })
       .then((res) => {
         if (res.error) {
-          alert(res.error.msg);
+          toast.error(res.error.msg);
           return;
         }
 
+        toast.success(res.data.msg);
         onSuccess();
       });
   };
@@ -67,7 +69,7 @@ export default function usePost(id: number) {
       })
       .then((res) => {
         if (res.error) {
-          alert(res.error.msg);
+          toast.error(res.error.msg);
           return;
         }
 
@@ -77,6 +79,7 @@ export default function usePost(id: number) {
 
   return {
     post,
+    setPost,
     deletePost,
     modifyPost,
   };

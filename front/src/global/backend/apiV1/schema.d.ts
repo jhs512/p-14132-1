@@ -60,6 +60,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/post/api/v1/posts/{postId}/genFiles/{typeCode}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** 파일 업로드 (다건) */
+        post: operations["upload"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/post/api/v1/posts/{postId}/genFiles/thumbnail/{fileNo}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** 썸네일 설정 */
+        post: operations["setThumbnail"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/post/api/v1/posts/{postId}/comments": {
         parameters: {
             query?: never;
@@ -72,6 +106,63 @@ export interface paths {
         put?: never;
         /** 작성 */
         post: operations["write_1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/post/api/v1/posts/{id}/like": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** 좋아요 토글 */
+        post: operations["toggleLike"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/post/api/v1/posts/{id}/hit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 조회수 증가
+         * @description 클라이언트에서 호출. 24시간 내 동일 글 재조회 시 증가하지 않음
+         */
+        post: operations["incrementHit"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/post/api/v1/posts/temp": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 임시저장 생성/조회
+         * @description 기존 임시저장 글이 있으면 반환, 없으면 새로 생성
+         */
+        post: operations["getOrCreateTemp"];
         delete?: never;
         options?: never;
         head?: never;
@@ -106,6 +197,74 @@ export interface paths {
         put?: never;
         /** 로그인 */
         post: operations["login"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/post/api/v1/posts/{postId}/genFiles": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 파일 목록 조회 */
+        get: operations["getItems_2"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/post/api/v1/posts/{postId}/genFiles/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 파일 단건 조회 */
+        get: operations["getItem_2"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/post/api/v1/posts/{postId}/genFiles/download/{id}/{fileName}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 파일 다운로드 */
+        get: operations["download"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/post/api/v1/posts/mine": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 내 게시물 목록 조회 (임시저장 포함) */
+        get: operations["getMine"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -188,7 +347,7 @@ export interface paths {
             cookie?: never;
         };
         /** 다건 조회 */
-        get: operations["getItems_2"];
+        get: operations["getItems_3"];
         put?: never;
         post?: never;
         delete?: never;
@@ -205,10 +364,27 @@ export interface paths {
             cookie?: never;
         };
         /** 단건 조회 */
-        get: operations["getItem_2"];
+        get: operations["getItem_3"];
         put?: never;
         post?: never;
         delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/post/api/v1/posts/{postId}/genFiles/{typeCode}/{fileNo}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** 파일 삭제 */
+        delete: operations["delete_2"];
         options?: never;
         head?: never;
         patch?: never;
@@ -246,10 +422,8 @@ export interface components {
         PostModifyReqBody: {
             title: string;
             content: string;
-        };
-        PostWriteReqBody: {
-            title: string;
-            content: string;
+            published?: boolean;
+            listed?: boolean;
         };
         PostDto: {
             /** Format: int32 */
@@ -263,11 +437,58 @@ export interface components {
             authorName: string;
             authorProfileImgUrl: string;
             title: string;
+            published: boolean;
+            listed: boolean;
+            thumbnailImgUrl: string;
+            /** Format: int32 */
+            likesCount: number;
+            /** Format: int32 */
+            commentsCount: number;
+            /** Format: int32 */
+            hitCount: number;
+            actorHasLiked: boolean;
         };
         RsDataPostDto: {
             resultCode: string;
             msg: string;
             data: components["schemas"]["PostDto"];
+        };
+        PostWriteReqBody: {
+            title: string;
+            content: string;
+            published?: boolean;
+            listed?: boolean;
+        };
+        PostGenFileDto: {
+            /** Format: int32 */
+            id: number;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            modifiedAt: string;
+            /** Format: int32 */
+            postId: number;
+            /** @enum {string} */
+            typeCode: "ATTACHMENT" | "THUMBNAIL";
+            /** Format: int32 */
+            fileNo: number;
+            originalFileName: string;
+            fileName: string;
+            fileExt: string;
+            fileExtTypeCode: string;
+            fileExtType2Code: string;
+            fileDateDir: string;
+            /** Format: int32 */
+            fileSize: number;
+            metadata: string;
+            filePath: string;
+            publicUrl: string;
+            downloadUrl: string;
+        };
+        RsDataListPostGenFileDto: {
+            resultCode: string;
+            msg: string;
+            data: components["schemas"]["PostGenFileDto"][];
         };
         PostCommentWriteReqBody: {
             content: string;
@@ -286,11 +507,62 @@ export interface components {
             /** Format: int32 */
             postId: number;
             content: string;
+            actorCanModify: boolean;
+            actorCanDelete: boolean;
         };
         RsDataPostCommentDto: {
             resultCode: string;
             msg: string;
             data: components["schemas"]["PostCommentDto"];
+        };
+        PostLikeToggleResBody: {
+            liked: boolean;
+            /** Format: int32 */
+            likesCount: number;
+        };
+        RsDataPostLikeToggleResBody: {
+            resultCode: string;
+            msg: string;
+            data: components["schemas"]["PostLikeToggleResBody"];
+        };
+        PostHitResBody: {
+            /** Format: int32 */
+            hitCount: number;
+        };
+        RsDataPostHitResBody: {
+            resultCode: string;
+            msg: string;
+            data: components["schemas"]["PostHitResBody"];
+        };
+        PostWithContentDto: {
+            /** Format: int32 */
+            id: number;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            modifiedAt: string;
+            /** Format: int32 */
+            authorId: number;
+            authorName: string;
+            authorProfileImgUrl: string;
+            title: string;
+            content: string;
+            published: boolean;
+            listed: boolean;
+            /** Format: int32 */
+            likesCount: number;
+            /** Format: int32 */
+            commentsCount: number;
+            /** Format: int32 */
+            hitCount: number;
+            actorHasLiked: boolean;
+            actorCanModify: boolean;
+            actorCanDelete: boolean;
+        };
+        RsDataPostWithContentDto: {
+            resultCode: string;
+            msg: string;
+            data: components["schemas"]["PostWithContentDto"];
         };
         MemberJoinReqBody: {
             username: string;
@@ -345,20 +617,6 @@ export interface components {
             /** Format: int32 */
             numberOfElements: number;
             sorted: boolean;
-        };
-        PostWithContentDto: {
-            /** Format: int32 */
-            id: number;
-            /** Format: date-time */
-            createdAt: string;
-            /** Format: date-time */
-            modifiedAt: string;
-            /** Format: int32 */
-            authorId: number;
-            authorName: string;
-            authorProfileImgUrl: string;
-            title: string;
-            content: string;
         };
         AdmPostCountResBody: {
             /** Format: int64 */
@@ -492,7 +750,9 @@ export interface operations {
     };
     getItem_1: {
         parameters: {
-            query?: never;
+            query?: {
+                lastModifyDateAfter?: string;
+            };
             header?: never;
             path: {
                 id: number;
@@ -542,7 +802,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json;charset=UTF-8": components["schemas"]["RsDataVoid"];
+                    "application/json;charset=UTF-8": components["schemas"]["RsDataPostDto"];
                 };
             };
             /** @description Bad Request */
@@ -655,6 +915,72 @@ export interface operations {
             };
         };
     };
+    upload: {
+        parameters: {
+            query: {
+                files: string[];
+            };
+            header?: never;
+            path: {
+                postId: number;
+                typeCode: "ATTACHMENT" | "THUMBNAIL";
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json;charset=UTF-8": components["schemas"]["RsDataListPostGenFileDto"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json;charset=UTF-8": components["schemas"]["RsDataVoid"];
+                };
+            };
+        };
+    };
+    setThumbnail: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                postId: number;
+                fileNo: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json;charset=UTF-8": components["schemas"]["RsDataVoid"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json;charset=UTF-8": components["schemas"]["RsDataVoid"];
+                };
+            };
+        };
+    };
     getItems_1: {
         parameters: {
             query?: never;
@@ -721,6 +1047,97 @@ export interface operations {
             };
         };
     };
+    toggleLike: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json;charset=UTF-8": components["schemas"]["RsDataPostLikeToggleResBody"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json;charset=UTF-8": components["schemas"]["RsDataVoid"];
+                };
+            };
+        };
+    };
+    incrementHit: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json;charset=UTF-8": components["schemas"]["RsDataPostHitResBody"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json;charset=UTF-8": components["schemas"]["RsDataVoid"];
+                };
+            };
+        };
+    };
+    getOrCreateTemp: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json;charset=UTF-8": components["schemas"]["RsDataPostWithContentDto"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json;charset=UTF-8": components["schemas"]["RsDataVoid"];
+                };
+            };
+        };
+    };
     join: {
         parameters: {
             query?: never;
@@ -774,6 +1191,136 @@ export interface operations {
                 };
                 content: {
                     "application/json;charset=UTF-8": components["schemas"]["RsDataMemberLoginResBody"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json;charset=UTF-8": components["schemas"]["RsDataVoid"];
+                };
+            };
+        };
+    };
+    getItems_2: {
+        parameters: {
+            query?: {
+                typeCode?: "ATTACHMENT" | "THUMBNAIL";
+            };
+            header?: never;
+            path: {
+                postId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json;charset=UTF-8": components["schemas"]["PostGenFileDto"][];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json;charset=UTF-8": components["schemas"]["RsDataVoid"];
+                };
+            };
+        };
+    };
+    getItem_2: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                postId: number;
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json;charset=UTF-8": components["schemas"]["PostGenFileDto"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json;charset=UTF-8": components["schemas"]["RsDataVoid"];
+                };
+            };
+        };
+    };
+    download: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                postId: number;
+                id: number;
+                fileName: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json;charset=UTF-8": string;
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json;charset=UTF-8": components["schemas"]["RsDataVoid"];
+                };
+            };
+        };
+    };
+    getMine: {
+        parameters: {
+            query?: {
+                page?: number;
+                pageSize?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json;charset=UTF-8": components["schemas"]["PageDtoPostDto"];
                 };
             };
             /** @description Bad Request */
@@ -903,7 +1450,7 @@ export interface operations {
             };
         };
     };
-    getItems_2: {
+    getItems_3: {
         parameters: {
             query?: {
                 page?: number;
@@ -938,7 +1485,7 @@ export interface operations {
             };
         };
     };
-    getItem_2: {
+    getItem_3: {
         parameters: {
             query?: never;
             header?: never;
@@ -956,6 +1503,39 @@ export interface operations {
                 };
                 content: {
                     "application/json;charset=UTF-8": components["schemas"]["MemberWithUsernameDto"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json;charset=UTF-8": components["schemas"]["RsDataVoid"];
+                };
+            };
+        };
+    };
+    delete_2: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                postId: number;
+                typeCode: "ATTACHMENT" | "THUMBNAIL";
+                fileNo: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json;charset=UTF-8": components["schemas"]["RsDataVoid"];
                 };
             };
             /** @description Bad Request */

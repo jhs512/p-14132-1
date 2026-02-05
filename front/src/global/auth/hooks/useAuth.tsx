@@ -2,6 +2,7 @@ import { createContext, use, useEffect, useState } from "react";
 
 import { components } from "@/global/backend/apiV1/schema";
 import client from "@/global/backend/client";
+import { toast } from "sonner";
 
 type MemberDto = components["schemas"]["MemberDto"];
 
@@ -9,14 +10,19 @@ export default function useAuth() {
   const [loginMember, setLoginMember] = useState<MemberDto>(
     null as unknown as MemberDto,
   );
+  const [isPending, setIsPending] = useState(true);
   const isLogin = loginMember !== null;
   const isAdmin = isLogin && loginMember.isAdmin;
 
   useEffect(() => {
     client.GET("/member/api/v1/members/me").then((res) => {
-      if (res.error) return;
+      if (res.error) {
+        setIsPending(false);
+        return;
+      }
 
       setLoginMember(res.data);
+      setIsPending(false);
     });
   }, []);
 
@@ -27,7 +33,7 @@ export default function useAuth() {
   const logout = (onSuccess: () => void) => {
     client.DELETE("/member/api/v1/members/logout").then((res) => {
       if (res.error) {
-        alert(res.error.msg);
+        toast.error(res.error.msg);
         return;
       }
 
@@ -40,6 +46,7 @@ export default function useAuth() {
   return {
     isLogin,
     isAdmin,
+    isPending,
     loginMember,
     logout,
     setLoginMember,

@@ -30,7 +30,7 @@ export default withAdmin(function Page({
         },
       })
       .then((res) => res.data && setMember(res.data));
-  }, []);
+  }, [id]);
 
   if (member == null) return <div>로딩중...</div>;
 
