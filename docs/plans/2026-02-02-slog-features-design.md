@@ -3,7 +3,10 @@
 ## 1. 개요
 
 ### 1.1 목적
-참조 프로젝트 [SLOG](https://github.com/jhs512/slog_2025_04)의 기능을 현재 프로젝트(MPM 아키텍처)에 구현한다.
+- 참조 프로젝트 [SLOG](https://github.com/jhs512/slog_2025_04)의 기능을 현재 프로젝트(MPM 아키텍처)에 구현한다.
+- 참조 프로젝트 경로 : /Users/jangka512/IdeaProjects/slog_2025_04
+  - 여기를 자주 참고해서 만들어줘.
+- 이 프로젝트는 학생들에게 제공되는 샘플이라서 아름답고 쉬워야 해요.
 
 ### 1.2 참조 프로젝트 기술 스택
 | 구분 | SLOG |
@@ -376,28 +379,29 @@ ALTER TABLE post ADD CONSTRAINT fk_post_thumbnail
 
 ## 9. 구현 단계
 
-### Phase 0: 기존 코드 리팩토링
-1. PostBody 엔티티 제거 → Post에 content 직접 포함
-2. DTO 상속 구조 도입
-3. Facade 권한 검증 통합
+### Phase 0: 기존 코드 리팩토링 ✅ 완료
+1. ~~PostBody 엔티티 제거~~ → **사용자 요청으로 유지**
+2. ~~DTO 상속 구조 도입~~ → **data class 제약으로 스킵**
+3. Facade 권한 검증 통합 (부분 적용)
 4. @Transactional 명시화
 
-### Phase 1: 게시물 상태 관리
-1. Post 엔티티에 published/listed 필드 추가
-2. 임시저장 API 구현
-3. 내 게시물 목록 API 구현
-4. 프론트엔드 수정
+### Phase 1: 게시물 상태 관리 ✅ 완료
+1. ✅ Post 엔티티에 published/listed 필드 추가
+2. ✅ 임시저장 API 구현 (POST /post/api/v1/posts/temp)
+3. ✅ 내 게시물 목록 API 구현 (GET /post/api/v1/posts/mine)
+4. ✅ 읽기 권한 확인 로직 추가 (checkActorCanRead)
+5. ✅ 테스트 케이스 추가
 
-### Phase 2: 파일 관리 시스템
-1. PostGenFile 엔티티 생성
-2. 파일 업로드/다운로드 API 구현
-3. 정적 파일 서빙 설정
-4. 프론트엔드 파일 관리 UI
+### Phase 2: 파일 관리 시스템 ✅ 완료
+1. ✅ PostGenFile 엔티티 생성
+2. ✅ 파일 업로드/다운로드 API 구현 (ApiV1PostGenFileController)
+3. ✅ 정적 파일 서빙 설정 (WebConfig, /gen/** 경로)
+4. ⏳ 프론트엔드 파일 관리 UI (추후 구현)
 
-### Phase 3: 프레젠테이션/Raw 모드
-1. PPT 데이터 API 구현
-2. Marp 프론트엔드 통합
-3. Raw 콘텐츠 뷰 구현
+### Phase 3: 프레젠테이션/Raw 모드 ✅ 완료
+1. ✅ PPT 데이터 API 구현 (GET /post/api/v1/posts/{id}/ppt)
+2. ✅ Raw 콘텐츠 API 구현 (GET /post/api/v1/posts/{id}/raw)
+3. ⏳ Marp 프론트엔드 통합 (추후 구현)
 
 ---
 

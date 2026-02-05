@@ -104,3 +104,15 @@ pnpm check                     # format + tsc + lint
 - 댓글: `/post/api/v1/posts/{postId}/comments`
 - 파일: `/post/api/v1/posts/{postId}/genFiles`
 - 회원: `/member/api/v1/members`
+
+## 자기점검 (작업 중간중간 실행)
+
+### 프론트엔드
+```bash
+cd front && pnpm check
+```
+
+### 백엔드
+```bash
+cd back && ./gradlew test
+```

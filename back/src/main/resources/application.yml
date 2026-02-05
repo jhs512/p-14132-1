@@ -1,6 +1,21 @@
 server:
+  port: 8080
+  shutdown: graceful
   forward-headers-strategy: native
+  tomcat:
+    max-swallow-size: 1GB
+    max-http-form-post-size: 1GB
 spring:
+  servlet:
+    multipart:
+      max-file-size: ${spring.servlet.multipart.max-request-size}
+      max-request-size: 5MB
+  web:
+    resources:
+      add-mappings: false
+  threads:
+    virtual:
+      enabled: true
   application:
     name: back
   config:
@@ -69,11 +84,24 @@ logging:
     org.hibernate.orm.jdbc.extract: TRACE
     org.springframework.transaction.interceptor: TRACE
 custom:
-  internalHost: http://localhost:8080
+  dev:
+    cookieDomain: localhost
+    frontUrl: "http://${custom.dev.cookieDomain}:3000"
+    backUrl: "http://${custom.dev.cookieDomain}:8080"
+  prod:
+    cookieDomain: slog.gg
+    frontUrl: "https://www.${custom.prod.cookieDomain}"
+    backUrl: "https://api.${custom.prod.cookieDomain}"
+  site:
+    cookieDomain: "${custom.dev.cookieDomain}"
+    frontUrl: "${custom.dev.frontUrl}"
+    backUrl: "${custom.dev.backUrl}"
   jwt:
     secretKey: ${CUSTOM__JWT__SECRET_KEY}
   accessToken:
     expirationSeconds: "#{60*20}"
+  genFile:
+    dirPath: ./gen_files
   systemMemberApiKey: ${CUSTOM__JWT__SECRET_KEY}
   notProdMembers:
     - username: KAKAO__4707664779

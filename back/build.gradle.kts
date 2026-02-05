@@ -1,9 +1,8 @@
 plugins {
-    java
     kotlin("jvm") version "2.2.21"
     kotlin("plugin.spring") version "2.2.21"
     kotlin("kapt") version "2.2.21"
-    id("org.springframework.boot") version "4.0.1"
+    id("org.springframework.boot") version "4.0.2"
     id("io.spring.dependency-management") version "1.1.7"
     kotlin("plugin.jpa") version "2.2.21"
 }
@@ -29,6 +28,11 @@ repositories {
 }
 
 dependencies {
+    // 파일 MIME 타입 자동 감지
+    implementation("org.apache.tika:tika-core:3.2.3")
+    // WebP 이미지 읽기/쓰기 지원
+    implementation("com.twelvemonkeys.imageio:imageio-webp:3.12.0")
+
     implementation("io.jsonwebtoken:jjwt-api:0.13.0")
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.13.0")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.13.0")
@@ -42,7 +46,7 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-validation-test")
 
     implementation("org.springframework.boot:spring-boot-starter-webmvc")
-    implementation("org.springframework:spring-test")
+    implementation("org.springframework:spring-test") // InternalRestClient 구현하는데 사용됨
     testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
 
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.0")
@@ -61,6 +65,8 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-security-test")
 
     implementation("org.springframework.boot:spring-boot-starter-security-oauth2-client")
+
+    implementation("org.springframework.boot:spring-boot-starter-websocket")
 
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
