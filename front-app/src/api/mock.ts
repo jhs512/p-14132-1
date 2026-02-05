@@ -151,19 +151,28 @@ const MOCK_POSTS: (PostDto & { content: string })[] = [
   },
 ];
 
+type SortField = "ID" | "LIKES" | "HITS";
+
 export function getMockPostList(
   page: number,
   pageSize: number,
   kw?: string,
+  sort: SortField = "ID",
 ): PostPageResponse {
-  let filtered = MOCK_POSTS;
+  let filtered = [...MOCK_POSTS];
   if (kw) {
     const q = kw.toLowerCase();
-    filtered = MOCK_POSTS.filter(
+    filtered = filtered.filter(
       (p) =>
         p.title.toLowerCase().includes(q) ||
         p.authorName.toLowerCase().includes(q),
     );
+  }
+
+  if (sort === "LIKES") {
+    filtered.sort((a, b) => b.likesCount - a.likesCount);
+  } else if (sort === "HITS") {
+    filtered.sort((a, b) => b.hitCount - a.hitCount);
   }
 
   const start = (page - 1) * pageSize;
@@ -198,6 +207,7 @@ export function getMockPost(id: string): PostWithContentDto {
     content: post.content,
     published: post.published,
     listed: post.listed,
+    thumbnailImgUrl: post.thumbnailImgUrl,
     likesCount: post.likesCount,
     commentsCount: post.commentsCount,
     hitCount: post.hitCount,

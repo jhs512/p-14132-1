@@ -35,6 +35,36 @@ export function usePosts(
   );
 }
 
+/** 최신순 (캐러셀용) */
+export function useLatestPosts(size: number) {
+  return useSWR<PostPageResponse>(
+    `posts:latest:${size}`,
+    USE_MOCK
+      ? () => getMockPostList(1, size)
+      : () => fetcher(`${API_BASE}/post/api/v1/posts?page=1&pageSize=${size}`),
+  );
+}
+
+/** 좋아요 많은 순 */
+export function usePopularByLikes(size: number) {
+  return useSWR<PostPageResponse>(
+    `posts:likes:${size}`,
+    USE_MOCK
+      ? () => getMockPostList(1, size, undefined, "LIKES")
+      : () => fetcher(`${API_BASE}/post/api/v1/posts?page=1&pageSize=${size}&sort=LIKES`),
+  );
+}
+
+/** 조회수 많은 순 */
+export function usePopularByHits(size: number) {
+  return useSWR<PostPageResponse>(
+    `posts:hits:${size}`,
+    USE_MOCK
+      ? () => getMockPostList(1, size, undefined, "HITS")
+      : () => fetcher(`${API_BASE}/post/api/v1/posts?page=1&pageSize=${size}&sort=HITS`),
+  );
+}
+
 export function usePost(id: string) {
   return useSWR<PostWithContentDto>(
     `posts/${id}`,

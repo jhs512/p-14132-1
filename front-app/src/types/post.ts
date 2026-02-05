@@ -28,6 +28,7 @@ export interface PostWithContentDto {
   content: string;
   published: boolean;
   listed: boolean;
+  thumbnailImgUrl: string;
   likesCount: number;
   commentsCount: number;
   hitCount: number;
